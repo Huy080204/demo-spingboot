@@ -1,6 +1,5 @@
 package com.example.demo.dto.response;
 
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -9,11 +8,10 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class UserResponse {
-    String id;
+public class StudentResponse {
+    Long id;
     String username;
     String password;
-    String firstName;
-    String lastName;
-    LocalDate dob;
+    String fullName;
+    LocalDate birthDate;
 }

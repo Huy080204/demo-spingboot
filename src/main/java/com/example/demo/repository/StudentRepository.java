@@ -1,12 +1,10 @@
 package com.example.demo.repository;
 
-import com.example.demo.entity.User;
+import com.example.demo.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, String> {
-
+public interface StudentRepository extends JpaRepository<Student, Long> {
     boolean existsByUsername(String username);
-
 }

@@ -11,22 +11,24 @@ import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/users")
 @Tag(name = "User Controller")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private PostService postService;
+    UserService userService;
+    PostService postService;
 
     @PostMapping
     public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest request) {
