@@ -28,3 +28,6 @@ open:
     description: API-Service
     serverUrl: http://localhost:8484/demo/
     serverName: Server Test
+
+jwt:
+  signerKey: "vDAJ8U1Ggknl0ZcKgDt6x7i8d1UGXUL+jhdE3TrYbaC+WnCbHrec8Sdx+rpqKgOi"

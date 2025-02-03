@@ -6,6 +6,7 @@ public enum ErrorCode {
     SUBJECT_CODE_EXITED("ERROR", "Subject code already exists"),
     SUBJECT_NOT_FOUND("NOT_FOUND", "Subject not found"),
     INVALID_FORM("ERROR", "Invalid form"),
+    UNAUTHENTICATED("ERROR", "Unauthenticated"),
     ;
 
     private String code;
