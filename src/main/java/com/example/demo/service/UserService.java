@@ -1,67 +1,22 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.UserCreateRequest;
-import com.example.demo.dto.request.UserUpdateRequest;
-import com.example.demo.dto.response.UserResponse;
+import com.example.demo.dto.request.user.UserCreateRequest;
+import com.example.demo.dto.request.user.UserUpdateRequest;
+import com.example.demo.dto.response.user.UserResponse;
 import com.example.demo.entity.User;
-import com.example.demo.exception.AppException;
-import com.example.demo.exception.ErrorCode;
-import com.example.demo.mapper.UserMapper;
-import com.example.demo.repository.UserRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
-@Service
-public class UserService {
+public interface UserService {
+    UserResponse createUser(UserCreateRequest request);
 
-    UserRepository userRepository;
-    UserMapper userMapper;
+    List<UserResponse> getAllUsers();
 
-    public UserResponse createUser(UserCreateRequest request) {
+    UserResponse getUserResponseById(String id);
 
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new AppException(ErrorCode.USER_EXITED);
-        }
+    User getUserById(String id);
 
-        User user = userMapper.toUser(request);
+    UserResponse updateUser(String id, UserUpdateRequest request);
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        return userMapper.toUserResponse(userRepository.save(user));
-    }
-
-    public List<UserResponse> getAllUsers() {
-        return userMapper.toUserResponseList(userRepository.findAll());
-    }
-
-    public UserResponse getUserResponseById(String id) {
-        return userMapper.toUserResponse(userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
-    }
-
-    public User getUserById(String id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-    }
-
-    public UserResponse updateUser(String id, UserUpdateRequest request) {
-        User user = getUserById(id);
-
-        userMapper.updateUser(user, request);
-
-        return userMapper.toUserResponse(userRepository.save(user));
-    }
-
-    public void deleteUser(String id) {
-        getUserById(id);
-        userRepository.deleteById(id);
-    }
+    void deleteUser(String id);
 }

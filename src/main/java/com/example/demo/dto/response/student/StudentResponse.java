@@ -1,7 +1,7 @@
-package com.example.demo.dto.response;
+package com.example.demo.dto.response.student;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
+        import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
@@ -9,9 +9,9 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class StudentResponse {
-    Long id;
+    Long studentId;
     String username;
     String password;
     String fullName;
-    LocalDate birthDate;
+    LocalDate dateOfBirth;
 }

@@ -1,4 +1,4 @@
-package com.example.demo.dto.response;
+package com.example.demo.dto.response.subject;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Getter
 @Builder
-public class IntrospectResponse {
-    boolean valid;
+@Getter
+public class SubjectResponse {
+    Long subjectId;
+    String subjectCode;
+    String subjectName;
 }

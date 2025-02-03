@@ -1,4 +1,4 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.request.student;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -28,5 +28,5 @@ public class StudentCreateRequest {
 
     @NotNull(message = "Date of birth name cannot be null")
     @Past(message = "Date of birth must be in the past")
-    LocalDate birthDate;
+    LocalDate dateOfBirth;
 }

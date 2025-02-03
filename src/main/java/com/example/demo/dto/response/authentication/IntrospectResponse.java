@@ -1,12 +1,13 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.response.authentication;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
-public class SubjectCreateRequest {
-    String name;
-    String code;
+@Builder
+public class IntrospectResponse {
+    boolean valid;
 }

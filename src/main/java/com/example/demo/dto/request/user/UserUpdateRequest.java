@@ -1,22 +1,17 @@
-package com.example.demo.dto.request;
+package com.example.demo.dto.request.user;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
-public class UserCreateRequest {
-
-    @NotNull(message = "Username cannot be null")
-    @NotEmpty(message = "Username cannot be empty")
-    String username;
+public class UserUpdateRequest {
 
     @NotNull(message = "Password cannot be null")
     @Size(min = 8, message = "Password must be at least 8 characters")

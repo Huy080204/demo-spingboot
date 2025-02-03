@@ -1,20 +1,21 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.StudentCreateRequest;
-import com.example.demo.dto.request.StudentUpdateRequest;
+import com.example.demo.dto.request.student.StudentCreateRequest;
+import com.example.demo.dto.request.student.StudentUpdateRequest;
 import com.example.demo.dto.response.APIResponse;
-import com.example.demo.dto.response.StudentResponse;
-import com.example.demo.dto.response.SubjectResponse;
+import com.example.demo.dto.response.student.StudentResponse;
+import com.example.demo.dto.response.subject.SubjectResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Subject;
 import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.service.StudentService;
-import com.example.demo.service.SubjectService;
+import com.example.demo.service.impl.SubjectServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,89 +29,112 @@ import java.util.List;
 public class StudentController {
 
     StudentService studentService;
-    SubjectService subjectService;
+    SubjectServiceImpl subjectService;
     SubjectMapper subjectMapper;
 
     @PostMapping
     public ResponseEntity<APIResponse<StudentResponse>> createUser(@RequestBody @Valid StudentCreateRequest request) {
-        APIResponse<StudentResponse> response = new APIResponse<>();
-        response.setCode("201");
-        response.setMessage("Student created successfully");
-        response.setData(studentService.createStudent(request));
-        return ResponseEntity.ok(response);
+        StudentResponse studentResponse = studentService.createStudent(request);
+
+        APIResponse<StudentResponse> response = APIResponse.<StudentResponse>builder()
+                .code(String.valueOf(HttpStatus.CREATED.value()))
+                .message("Student created successfully")
+                .data(studentResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<APIResponse<List<StudentResponse>>> getAllStudents() {
-        APIResponse<List<StudentResponse>> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Get all students successfully");
-        response.setData(studentService.getAllStudents());
-        return ResponseEntity.ok(response);
+        List<StudentResponse> studentResponses = studentService.getAllStudents();
+
+        APIResponse<List<StudentResponse>> response = APIResponse.<List<StudentResponse>>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Get all students successfully")
+                .data(studentResponses)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<APIResponse<StudentResponse>> getStudentById(@PathVariable("id") Long id) {
-        APIResponse<StudentResponse> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Get student successfully");
-        response.setData(studentService.getStudentResponseById(id));
-        return ResponseEntity.ok(response);
+        StudentResponse studentResponse = studentService.getStudentResponseById(id);
+
+        APIResponse<StudentResponse> response = APIResponse.<StudentResponse>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Get student successfully")
+                .data(studentResponse)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<APIResponse<StudentResponse>> updateStudent(@PathVariable("id") Long id,
                                                                       @RequestBody @Valid StudentUpdateRequest request) {
-        APIResponse<StudentResponse> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Student updated successfully");
-        response.setData(studentService.updateStudent(id, request));
-        return ResponseEntity.ok(response);
+        StudentResponse updatedStudent = studentService.updateStudent(id, request);
+
+        APIResponse<StudentResponse> response = APIResponse.<StudentResponse>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Student updated successfully")
+                .data(updatedStudent)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<APIResponse<Void>> deleteUser(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
-        APIResponse<Void> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Student deleted successfully");
-        return ResponseEntity.ok(response);
+
+        APIResponse<Void> response = APIResponse.<Void>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Student deleted successfully")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PostMapping(path = "/{studentId}/enroll")
     public ResponseEntity<APIResponse<Void>> enrollSubject(@PathVariable Long studentId, @RequestParam Long subjectId) {
-        APIResponse<Void> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Enroll subject successfully");
-
         Subject subject = subjectService.getSubjectById(subjectId);
-
         studentService.enrollSubject(studentId, subject);
 
-        return ResponseEntity.ok(response);
+        APIResponse<Void> response = APIResponse.<Void>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Enroll subject successfully")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping(path = "/{studentId}/subject")
     public ResponseEntity<APIResponse<Void>> deleteSubject(@PathVariable Long studentId, @RequestParam Long subjectId) {
-        APIResponse<Void> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Delete subject successfully");
-
         Subject subject = subjectService.getSubjectById(subjectId);
-
         studentService.deleteSubject(studentId, subject);
 
-        return ResponseEntity.ok(response);
+        APIResponse<Void> response = APIResponse.<Void>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Delete subject successfully")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(path = "/{id}/subjects")
     public ResponseEntity<APIResponse<List<SubjectResponse>>> getAllSubjects(@PathVariable("id") Long id) {
-        APIResponse<List<SubjectResponse>> response = new APIResponse<>();
-        response.setCode("200");
-        response.setMessage("Get all subjects successfully");
         Student student = studentService.getStudentById(id);
-        response.setData(subjectMapper.toSubjectResponseList(student.getSubjects()));
-        return ResponseEntity.ok(response);
+        List<SubjectResponse> subjectResponses = subjectMapper.toSubjectResponseList(student.getSubjects());
+
+        APIResponse<List<SubjectResponse>> response = APIResponse.<List<SubjectResponse>>builder()
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Get all subjects successfully")
+                .data(subjectResponses)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
