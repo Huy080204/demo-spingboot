@@ -22,8 +22,4 @@ public interface StudentService {
 
     void deleteStudent(Long id);
 
-    void enrollSubject(Long studentId, Subject subject);
-
-    void deleteSubject(Long studentId, Subject subject);
-
 }

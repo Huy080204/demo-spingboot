@@ -6,7 +6,7 @@ import com.example.demo.dto.response.student.StudentResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Subject;
 import com.example.demo.exception.AppException;
-import com.example.demo.exception.ErrorCode;
+import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
@@ -66,23 +66,6 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Long id) {
         getStudentById(id);
         studentRepository.deleteById(id);
-    }
-
-    @Override
-    public void enrollSubject(Long studentId, Subject subject) {
-        Student student = getStudentById(studentId);
-        student.getSubjects().add(subject);
-        studentRepository.save(student);
-    }
-
-    @Override
-    public void deleteSubject(Long studentId, Subject subject) {
-        Student student = getStudentById(studentId);
-        if (!student.getSubjects().contains(subject)) {
-            throw new AppException(ErrorCode.SUBJECT_NOT_FOUND);
-        }
-        student.getSubjects().remove(subject);
-        studentRepository.save(student);
     }
 
 }

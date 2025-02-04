@@ -34,6 +34,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest request) {
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.CREATED))
                 .message("User created successfully")
                 .data(userService.createUser(request))
@@ -45,6 +46,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<APIResponse<List<UserResponse>>> getAllUsers() {
         APIResponse<List<UserResponse>> response = APIResponse.<List<UserResponse>>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all users successfully")
                 .data(userService.getAllUsers())
@@ -56,6 +58,7 @@ public class UserController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<APIResponse<UserResponse>> getUserById(@PathVariable("id") String id) {
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get user successfully")
                 .data(userService.getUserResponseById(id))
@@ -67,6 +70,7 @@ public class UserController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<APIResponse<UserResponse>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateRequest request) {
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User updated successfully")
                 .data(userService.updateUser(id, request))
@@ -79,6 +83,7 @@ public class UserController {
     public ResponseEntity<APIResponse<Void>> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
         APIResponse<Void> response = APIResponse.<Void>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User deleted successfully")
                 .build();
@@ -92,6 +97,7 @@ public class UserController {
         Post post = postService.createPost(user, request);
 
         APIResponse<Post> response = APIResponse.<Post>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Post created successfully")
                 .data(post)
@@ -105,6 +111,7 @@ public class UserController {
         User user = userService.getUserById(userId);
 
         APIResponse<List<Post>> response = APIResponse.<List<Post>>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Posts retrieved successfully")
                 .data(user.getPosts())

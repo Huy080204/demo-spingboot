@@ -1,4 +1,4 @@
-package com.example.demo.exception;
+package com.example.demo.enumeration;
 
 public enum ErrorCode {
     USER_EXITED("ERROR", "Username already exists"),

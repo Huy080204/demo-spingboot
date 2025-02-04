@@ -32,6 +32,7 @@ public class AuthenticationController {
         AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest);
 
         APIResponse<AuthenticationResponse> response = APIResponse.<AuthenticationResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")
                 .data(authenticationResponse)
@@ -45,6 +46,7 @@ public class AuthenticationController {
         IntrospectResponse introspectResponse = authenticationService.introspect(introspectRequest);
 
         APIResponse<IntrospectResponse> response = APIResponse.<IntrospectResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")
                 .data(introspectResponse)

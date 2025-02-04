@@ -6,7 +6,7 @@ import com.example.demo.dto.response.subject.SubjectResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Subject;
 import com.example.demo.exception.AppException;
-import com.example.demo.exception.ErrorCode;
+import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.SubjectService;
@@ -69,20 +69,20 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Override
     public void addStudentToSubject(Subject subject, Student student) {
-        if (subject.getStudents().contains(student)) {
-            throw new AppException(ErrorCode.STUDENT_ALREADY_ENROLLED);
-        }
-        subject.getStudents().add(student);
-        subjectRepository.save(subject);
+//        if (subject.getStudents().contains(student)) {
+//            throw new AppException(ErrorCode.STUDENT_ALREADY_ENROLLED);
+//        }
+//        subject.getStudents().add(student);
+//        subjectRepository.save(subject);
     }
 
     @Override
     public void deleteSubjectForStudent(Long id, Student student) {
-        Subject subject = getSubjectById(id);
-        if (!subject.getStudents().contains(student)) {
-            throw new AppException(ErrorCode.STUDENT_NOT_FOUND);
-        }
-        subject.getStudents().remove(student);
-        subjectRepository.save(subject);
+//        Subject subject = getSubjectById(id);
+//        if (!subject.getStudents().contains(student)) {
+//            throw new AppException(ErrorCode.STUDENT_NOT_FOUND);
+//        }
+//        subject.getStudents().remove(student);
+//        subjectRepository.save(subject);
     }
 }

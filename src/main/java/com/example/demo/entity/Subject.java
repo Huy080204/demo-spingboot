@@ -27,6 +27,6 @@ public class Subject {
     String code;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "subjects")
-    List<Student> students = new ArrayList<>();
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<StudentSubject> studentSubjects = new ArrayList<>();
 }

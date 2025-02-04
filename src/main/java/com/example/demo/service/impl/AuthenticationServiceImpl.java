@@ -6,7 +6,7 @@ import com.example.demo.dto.response.authentication.AuthenticationResponse;
 import com.example.demo.dto.response.authentication.IntrospectResponse;
 import com.example.demo.entity.User;
 import com.example.demo.exception.AppException;
-import com.example.demo.exception.ErrorCode;
+import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthenticationService;
 import com.nimbusds.jose.*;

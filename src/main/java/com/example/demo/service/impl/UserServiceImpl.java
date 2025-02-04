@@ -5,7 +5,7 @@ import com.example.demo.dto.request.user.UserUpdateRequest;
 import com.example.demo.dto.response.user.UserResponse;
 import com.example.demo.entity.User;
 import com.example.demo.exception.AppException;
-import com.example.demo.exception.ErrorCode;
+import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;

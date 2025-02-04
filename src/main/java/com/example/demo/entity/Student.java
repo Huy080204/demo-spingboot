@@ -34,11 +34,6 @@ public class Student {
     LocalDate birthDate;
 
     @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "student_subject",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "subject_id")
-    )
-    List<Subject> subjects = new ArrayList<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    List<StudentSubject> studentSubjects = new ArrayList<>();
 }

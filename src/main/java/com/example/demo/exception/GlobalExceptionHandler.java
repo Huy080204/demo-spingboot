@@ -2,6 +2,7 @@ package com.example.demo.exception;
 
 import com.example.demo.dto.response.APIResponse;
 import com.example.demo.dto.response.exception.FieldErrorResponse;
+import com.example.demo.enumeration.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

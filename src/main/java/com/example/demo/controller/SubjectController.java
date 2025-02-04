@@ -31,13 +31,13 @@ public class SubjectController {
 
     SubjectService subjectService;
     StudentService studentService;
-    StudentMapper studentMapper;
 
     @PostMapping
     public ResponseEntity<APIResponse<SubjectResponse>> createSubject(@RequestBody @Valid SubjectCreateRequest request) {
         SubjectResponse subjectResponse = subjectService.createSubject(request);
 
         APIResponse<SubjectResponse> response = APIResponse.<SubjectResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Subject created successfully")
                 .data(subjectResponse)
@@ -54,6 +54,7 @@ public class SubjectController {
         subjectService.addStudentToSubject(subject, student);
 
         APIResponse<Void> response = APIResponse.<Void>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Add student to subject successfully")
                 .build();
@@ -66,6 +67,7 @@ public class SubjectController {
         List<SubjectResponse> subjects = subjectService.getAllSubjects();
 
         APIResponse<List<SubjectResponse>> response = APIResponse.<List<SubjectResponse>>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all subjects successfully")
                 .data(subjects)
@@ -79,6 +81,7 @@ public class SubjectController {
         SubjectResponse subjectResponse = subjectService.getSubjectResponseById(id);
 
         APIResponse<SubjectResponse> response = APIResponse.<SubjectResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get subject successfully")
                 .data(subjectResponse)
@@ -87,18 +90,18 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping(path = "/{id}/students")
-    public ResponseEntity<APIResponse<List<StudentResponse>>> getAllStudentsBySubjectId(@PathVariable("id") Long id) {
-        List<StudentResponse> studentResponses = studentMapper.toStudentResponseList(subjectService.getSubjectById(id).getStudents());
-
-        APIResponse<List<StudentResponse>> response = APIResponse.<List<StudentResponse>>builder()
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Get all students successfully")
-                .data(studentResponses)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
+//    @GetMapping(path = "/{id}/students")
+//    public ResponseEntity<APIResponse<List<StudentResponse>>> getAllStudentsBySubjectId(@PathVariable("id") Long id) {
+//        List<StudentResponse> studentResponses = studentMapper.toStudentResponseList(subjectService.getSubjectById(id).getStudents());
+//
+//        APIResponse<List<StudentResponse>> response = APIResponse.<List<StudentResponse>>builder()
+//                .code(String.valueOf(HttpStatus.OK.value()))
+//                .message("Get all students successfully")
+//                .data(studentResponses)
+//                .build();
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<APIResponse<SubjectResponse>> updateStudent(@PathVariable("id") Long id,
@@ -106,6 +109,7 @@ public class SubjectController {
         SubjectResponse subjectResponse = subjectService.updateSubject(id, request);
 
         APIResponse<SubjectResponse> response = APIResponse.<SubjectResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Subject updated successfully")
                 .data(subjectResponse)
@@ -119,6 +123,7 @@ public class SubjectController {
         subjectService.deleteSubject(id);
 
         APIResponse<Void> response = APIResponse.<Void>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Subject deleted successfully")
                 .build();
@@ -136,6 +141,7 @@ public class SubjectController {
         subjectService.deleteSubjectForStudent(subjectId, student);
 
         APIResponse<Void> response = APIResponse.<Void>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Delete subject successfully")
                 .build();

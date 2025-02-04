@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class StudentController {
         StudentResponse studentResponse = studentService.createStudent(request);
 
         APIResponse<StudentResponse> response = APIResponse.<StudentResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Student created successfully")
                 .data(studentResponse)
@@ -50,6 +52,7 @@ public class StudentController {
         List<StudentResponse> studentResponses = studentService.getAllStudents();
 
         APIResponse<List<StudentResponse>> response = APIResponse.<List<StudentResponse>>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all students successfully")
                 .data(studentResponses)
@@ -63,6 +66,7 @@ public class StudentController {
         StudentResponse studentResponse = studentService.getStudentResponseById(id);
 
         APIResponse<StudentResponse> response = APIResponse.<StudentResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get student successfully")
                 .data(studentResponse)
@@ -77,6 +81,7 @@ public class StudentController {
         StudentResponse updatedStudent = studentService.updateStudent(id, request);
 
         APIResponse<StudentResponse> response = APIResponse.<StudentResponse>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Student updated successfully")
                 .data(updatedStudent)
@@ -90,34 +95,9 @@ public class StudentController {
         studentService.deleteStudent(id);
 
         APIResponse<Void> response = APIResponse.<Void>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Student deleted successfully")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PostMapping(path = "/{studentId}/enroll")
-    public ResponseEntity<APIResponse<Void>> enrollSubject(@PathVariable Long studentId, @RequestParam Long subjectId) {
-        Subject subject = subjectService.getSubjectById(subjectId);
-        studentService.enrollSubject(studentId, subject);
-
-        APIResponse<Void> response = APIResponse.<Void>builder()
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Enroll subject successfully")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @DeleteMapping(path = "/{studentId}/subject")
-    public ResponseEntity<APIResponse<Void>> deleteSubject(@PathVariable Long studentId, @RequestParam Long subjectId) {
-        Subject subject = subjectService.getSubjectById(subjectId);
-        studentService.deleteSubject(studentId, subject);
-
-        APIResponse<Void> response = APIResponse.<Void>builder()
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Delete subject successfully")
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -126,9 +106,12 @@ public class StudentController {
     @GetMapping(path = "/{id}/subjects")
     public ResponseEntity<APIResponse<List<SubjectResponse>>> getAllSubjects(@PathVariable("id") Long id) {
         Student student = studentService.getStudentById(id);
-        List<SubjectResponse> subjectResponses = subjectMapper.toSubjectResponseList(student.getSubjects());
+        List<SubjectResponse> subjectResponses = student.getStudentSubjects().stream()
+                .map(studentSubject -> subjectMapper.toSubjectResponse(studentSubject.getSubject()))
+                .collect(Collectors.toList());
 
         APIResponse<List<SubjectResponse>> response = APIResponse.<List<SubjectResponse>>builder()
+                .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all subjects successfully")
                 .data(subjectResponses)
