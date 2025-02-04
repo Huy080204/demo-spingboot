@@ -25,7 +25,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/subjects")
+@RequestMapping(path = "/api/subjects")
 @Tag(name = "Subject Controller")
 public class SubjectController {
 

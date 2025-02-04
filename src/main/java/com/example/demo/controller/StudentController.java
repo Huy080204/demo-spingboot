@@ -25,12 +25,11 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/students")
+@RequestMapping(path = "/api/students")
 @Tag(name = "Student Controller")
 public class StudentController {
 
     StudentService studentService;
-    SubjectServiceImpl subjectService;
     SubjectMapper subjectMapper;
 
     @PostMapping

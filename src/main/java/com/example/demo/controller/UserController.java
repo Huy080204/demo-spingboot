@@ -24,7 +24,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping(path = "/api/users")
 @Tag(name = "User Controller")
 public class UserController {
 

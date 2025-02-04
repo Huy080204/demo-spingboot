@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,11 +50,31 @@ public class GlobalExceptionHandler {
 
         APIResponse<List<FieldErrorResponse>> response = APIResponse.<List<FieldErrorResponse>>builder()
                 .result(false)
-                .message(errorCode.getCode())
-                .code(errorCode.getMessage())
+                .message(errorCode.getMessage())
+                .code(errorCode.getCode())
                 .data(errors)
                 .build();
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<APIResponse<String>> handleNotFoundException(NoHandlerFoundException exception) {
+        APIResponse<String> response = APIResponse.<String>builder()
+                .result(false)
+                .message("The requested resource was not found: " + exception.getRequestURL())
+                .code("NOT_FOUND")
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<APIResponse<String>> handleResponseStatusException(ResponseStatusException exception) {
+        APIResponse<String> response = APIResponse.<String>builder()
+                .result(false)
+                .message(exception.getReason())
+                .code(exception.getStatusCode().toString())
+                .build();
+        return ResponseEntity.status(exception.getStatusCode()).body(response);
     }
 
 }
