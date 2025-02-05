@@ -3,22 +3,23 @@ package com.example.demo.controller;
 import com.example.demo.dto.request.student.StudentCreateRequest;
 import com.example.demo.dto.request.student.StudentUpdateRequest;
 import com.example.demo.dto.response.APIResponse;
+import com.example.demo.dto.response.PageResponse;
 import com.example.demo.dto.response.student.StudentResponse;
 import com.example.demo.dto.response.subject.SubjectResponse;
 import com.example.demo.entity.Student;
-import com.example.demo.entity.Subject;
 import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.service.StudentService;
-import com.example.demo.service.impl.SubjectServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -117,6 +118,23 @@ public class StudentController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping(path = "/list")
+    public APIResponse<PageResponse<StudentResponse>> list(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            @RequestParam(value = "fullName", required = false) String fullName,
+            @RequestParam(value = "birthDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthDate
+    ) {
+        PageResponse<StudentResponse> pageResponse = studentService.getPageStudents(page, size, fullName, birthDate);
+
+        return APIResponse.<PageResponse<StudentResponse>>builder()
+                .result(true)
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Get students successfully")
+                .data(pageResponse)
+                .build();
     }
 
 }

@@ -2,6 +2,8 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.subject.SubjectCreateRequest;
 import com.example.demo.dto.request.subject.SubjectUpdateRequest;
+import com.example.demo.dto.response.PageResponse;
+import com.example.demo.dto.response.student.StudentResponse;
 import com.example.demo.dto.response.subject.SubjectResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Subject;
@@ -10,11 +12,20 @@ import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.SubjectService;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -68,21 +79,27 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public void addStudentToSubject(Subject subject, Student student) {
-//        if (subject.getStudents().contains(student)) {
-//            throw new AppException(ErrorCode.STUDENT_ALREADY_ENROLLED);
-//        }
-//        subject.getStudents().add(student);
-//        subjectRepository.save(subject);
-    }
+    public PageResponse<SubjectResponse> getPageSubjects(int page, int size, String subjectName) {
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-    @Override
-    public void deleteSubjectForStudent(Long id, Student student) {
-//        Subject subject = getSubjectById(id);
-//        if (!subject.getStudents().contains(student)) {
-//            throw new AppException(ErrorCode.STUDENT_NOT_FOUND);
-//        }
-//        subject.getStudents().remove(student);
-//        subjectRepository.save(subject);
+        Specification<Subject> spec = (Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (subjectName != null && !subjectName.trim().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get("name")), "%" + subjectName.toLowerCase() + "%"));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Page<Subject> pageData = subjectRepository.findAll(spec, pageable);
+
+        return PageResponse.<SubjectResponse>builder()
+                .currentPage(page)
+                .totalPages(pageData.getTotalPages())
+                .pageSize(size)
+                .totalElements(pageData.getTotalElements())
+                .data(subjectMapper.toSubjectResponseList(pageData.getContent()))
+                .build();
     }
 }

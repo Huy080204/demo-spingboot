@@ -3,14 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.dto.request.subject.SubjectCreateRequest;
 import com.example.demo.dto.request.subject.SubjectUpdateRequest;
 import com.example.demo.dto.response.APIResponse;
-import com.example.demo.dto.response.student.StudentResponse;
+import com.example.demo.dto.response.PageResponse;
 import com.example.demo.dto.response.subject.SubjectResponse;
-import com.example.demo.entity.Student;
-import com.example.demo.entity.Subject;
-import com.example.demo.mapper.StudentMapper;
-import com.example.demo.service.StudentService;
 import com.example.demo.service.SubjectService;
-import com.example.demo.service.impl.SubjectServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -30,7 +25,6 @@ import java.util.List;
 public class SubjectController {
 
     SubjectService subjectService;
-    StudentService studentService;
 
     @PostMapping
     public ResponseEntity<APIResponse<SubjectResponse>> createSubject(@RequestBody @Valid SubjectCreateRequest request) {
@@ -44,22 +38,6 @@ public class SubjectController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PostMapping(path = "/{subjectId}")
-    public ResponseEntity<APIResponse<Void>> addStudentToSubject(@PathVariable Long subjectId, @RequestParam Long studentId) {
-        Subject subject = subjectService.getSubjectById(subjectId);
-        Student student = studentService.getStudentById(studentId);
-
-        subjectService.addStudentToSubject(subject, student);
-
-        APIResponse<Void> response = APIResponse.<Void>builder()
-                .result(true)
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Add student to subject successfully")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping
@@ -90,19 +68,6 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-//    @GetMapping(path = "/{id}/students")
-//    public ResponseEntity<APIResponse<List<StudentResponse>>> getAllStudentsBySubjectId(@PathVariable("id") Long id) {
-//        List<StudentResponse> studentResponses = studentMapper.toStudentResponseList(subjectService.getSubjectById(id).getStudents());
-//
-//        APIResponse<List<StudentResponse>> response = APIResponse.<List<StudentResponse>>builder()
-//                .code(String.valueOf(HttpStatus.OK.value()))
-//                .message("Get all students successfully")
-//                .data(studentResponses)
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(response);
-//    }
-
     @PutMapping(path = "/{id}")
     public ResponseEntity<APIResponse<SubjectResponse>> updateStudent(@PathVariable("id") Long id,
                                                                       @RequestBody @Valid SubjectUpdateRequest request) {
@@ -131,22 +96,20 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping(path = "/{subjectId}/students/{studentId}")
-    public ResponseEntity<APIResponse<Void>> deleteSubjectForStudent(
-            @PathVariable Long subjectId,
-            @PathVariable Long studentId) {
+    @GetMapping(path = "/list")
+    public APIResponse<PageResponse<SubjectResponse>> list(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            @RequestParam(value = "subjectName", required = false) String subjectName
+    ) {
+        PageResponse<SubjectResponse> pageResponse = subjectService.getPageSubjects(page, size, subjectName);
 
-        Student student = studentService.getStudentById(studentId);
-
-        subjectService.deleteSubjectForStudent(subjectId, student);
-
-        APIResponse<Void> response = APIResponse.<Void>builder()
+        return APIResponse.<PageResponse<SubjectResponse>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Delete subject successfully")
+                .message("Get students successfully")
+                .data(pageResponse)
                 .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }
