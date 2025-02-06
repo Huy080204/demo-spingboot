@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.criteria.SubjectCriteria;
 import com.example.demo.dto.request.subject.SubjectCreateRequest;
 import com.example.demo.dto.request.subject.SubjectUpdateRequest;
 import com.example.demo.dto.response.PageResponse;
@@ -79,25 +80,13 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public PageResponse<SubjectResponse> getPageSubjects(int page, int size, String subjectName) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-
-        Specification<Subject> spec = (Root<Subject> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (subjectName != null && !subjectName.trim().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get("name")), "%" + subjectName.toLowerCase() + "%"));
-            }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-
-        Page<Subject> pageData = subjectRepository.findAll(spec, pageable);
+    public PageResponse<SubjectResponse> getPageSubjects(SubjectCriteria subjectCriteria, Pageable pageable) {
+        Page<Subject> pageData = subjectRepository.findAll(subjectCriteria.getCriteria(), pageable);
 
         return PageResponse.<SubjectResponse>builder()
-                .currentPage(page)
+                .currentPage(pageable.getPageNumber())
                 .totalPages(pageData.getTotalPages())
-                .pageSize(size)
+                .pageSize(pageable.getPageSize())
                 .totalElements(pageData.getTotalElements())
                 .data(subjectMapper.toSubjectResponseList(pageData.getContent()))
                 .build();

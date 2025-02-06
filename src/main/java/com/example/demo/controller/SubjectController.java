@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.criteria.StudentCriteria;
+import com.example.demo.criteria.SubjectCriteria;
 import com.example.demo.dto.request.subject.SubjectCreateRequest;
 import com.example.demo.dto.request.subject.SubjectUpdateRequest;
 import com.example.demo.dto.response.APIResponse;
@@ -11,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -98,16 +101,15 @@ public class SubjectController {
 
     @GetMapping(path = "/list")
     public APIResponse<PageResponse<SubjectResponse>> list(
-            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-            @RequestParam(value = "subjectName", required = false) String subjectName
+            @ModelAttribute SubjectCriteria subjectCriteria,
+            Pageable pageable
     ) {
-        PageResponse<SubjectResponse> pageResponse = subjectService.getPageSubjects(page, size, subjectName);
+        PageResponse<SubjectResponse> pageResponse = subjectService.getPageSubjects(subjectCriteria, pageable);
 
         return APIResponse.<PageResponse<SubjectResponse>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Get students successfully")
+                .message("Get subject successfully")
                 .data(pageResponse)
                 .build();
     }

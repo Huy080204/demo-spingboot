@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.criteria.StudentCriteria;
+import com.example.demo.criteria.SubjectCriteria;
 import com.example.demo.dto.request.student.StudentCreateRequest;
 import com.example.demo.dto.request.student.StudentUpdateRequest;
 import com.example.demo.dto.response.APIResponse;
@@ -14,6 +16,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -122,17 +125,31 @@ public class StudentController {
 
     @GetMapping(path = "/list")
     public APIResponse<PageResponse<StudentResponse>> list(
-            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-            @RequestParam(value = "fullName", required = false) String fullName,
-            @RequestParam(value = "birthDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthDate
+            @ModelAttribute StudentCriteria studentCriteria,
+            Pageable pageable
     ) {
-        PageResponse<StudentResponse> pageResponse = studentService.getPageStudents(page, size, fullName, birthDate);
+        PageResponse<StudentResponse> pageResponse = studentService.getPageStudents(studentCriteria, pageable);
 
         return APIResponse.<PageResponse<StudentResponse>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get students successfully")
+                .data(pageResponse)
+                .build();
+    }
+
+    @GetMapping(path = "/list/{studentId}/subjects")
+    public APIResponse<PageResponse<SubjectResponse>> list(
+            @PathVariable Long studentId,
+            @ModelAttribute SubjectCriteria subjectCriteria,
+            Pageable pageable
+    ) {
+        PageResponse<SubjectResponse> pageResponse = studentService.getPageSubjectsByStudent(studentId, subjectCriteria, pageable);
+
+        return APIResponse.<PageResponse<SubjectResponse>>builder()
+                .result(true)
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message(String.format("Get subjects for student %d successfully", studentId))
                 .data(pageResponse)
                 .build();
     }

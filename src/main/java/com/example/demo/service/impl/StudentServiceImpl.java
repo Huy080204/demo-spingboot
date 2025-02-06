@@ -1,19 +1,23 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.criteria.StudentCriteria;
+import com.example.demo.criteria.SubjectCriteria;
 import com.example.demo.dto.request.student.StudentCreateRequest;
 import com.example.demo.dto.request.student.StudentUpdateRequest;
 import com.example.demo.dto.response.PageResponse;
 import com.example.demo.dto.response.student.StudentResponse;
+import com.example.demo.dto.response.subject.SubjectResponse;
 import com.example.demo.entity.Student;
+import com.example.demo.entity.StudentSubject;
+import com.example.demo.entity.Subject;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.StudentMapper;
+import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.StudentService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,7 +37,9 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     StudentRepository studentRepository;
+    SubjectRepository subjectRepository;
     StudentMapper studentMapper;
+    SubjectMapper subjectMapper;
 
     @Override
     public StudentResponse createStudent(StudentCreateRequest request) {
@@ -79,31 +85,39 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public PageResponse<StudentResponse> getPageStudents(int page, int size, String fullName, LocalDate birthDate) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-
-        Specification<Student> spec = (Root<Student> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            if (fullName != null && !fullName.trim().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get("fullName")), "%" + fullName.toLowerCase() + "%"));
-            }
-
-            if (birthDate != null) {
-                predicates.add(cb.equal(root.get("birthDate"), birthDate));
-            }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-
-        Page<Student> pageData = studentRepository.findAll(spec, pageable);
+    public PageResponse<StudentResponse> getPageStudents(StudentCriteria studentCriteria, Pageable pageable) {
+        Page<Student> pageData = studentRepository.findAll(studentCriteria.getCriteria(), pageable);
 
         return PageResponse.<StudentResponse>builder()
-                .currentPage(page)
+                .currentPage(pageable.getPageNumber())
                 .totalPages(pageData.getTotalPages())
-                .pageSize(size)
+                .pageSize(pageable.getPageSize())
                 .totalElements(pageData.getTotalElements())
                 .data(studentMapper.toStudentResponseList(pageData.getContent()))
+                .build();
+    }
+
+    @Override
+    public PageResponse<SubjectResponse> getPageSubjectsByStudent(Long studentId, SubjectCriteria subjectCriteria, Pageable pageable) {
+        Specification<Subject> subjectSpec = subjectCriteria.getCriteria();
+
+        Specification<Subject> studentSpec = (root, query, cb) -> {
+            Join<Subject, StudentSubject> studentSubjectJoin = root.join("studentSubjects");
+            Join<StudentSubject, Student> studentJoin = studentSubjectJoin.join("student");
+
+            return cb.equal(studentJoin.get("id"), studentId);
+        };
+
+        Specification<Subject> finalSpec = subjectSpec.and(studentSpec);
+
+        Page<Subject> pageData = subjectRepository.findAll(finalSpec, pageable);
+
+        return PageResponse.<SubjectResponse>builder()
+                .currentPage(pageable.getPageNumber())
+                .totalPages(pageData.getTotalPages())
+                .pageSize(pageable.getPageSize())
+                .totalElements(pageData.getTotalElements())
+                .data(subjectMapper.toSubjectResponseList(pageData.getContent()))
                 .build();
     }
 }

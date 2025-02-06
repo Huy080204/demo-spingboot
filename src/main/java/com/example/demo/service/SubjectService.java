@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.criteria.SubjectCriteria;
 import com.example.demo.dto.request.subject.SubjectCreateRequest;
 import com.example.demo.dto.request.subject.SubjectUpdateRequest;
 import com.example.demo.dto.response.PageResponse;
@@ -7,6 +8,7 @@ import com.example.demo.dto.response.student.StudentResponse;
 import com.example.demo.dto.response.subject.SubjectResponse;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Subject;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,5 +26,5 @@ public interface SubjectService {
 
     void deleteSubject(Long id);
 
-    PageResponse<SubjectResponse> getPageSubjects(int page, int size, String subjectName);
+    PageResponse<SubjectResponse> getPageSubjects(SubjectCriteria subjectCriteria, Pageable pageable);
 }
