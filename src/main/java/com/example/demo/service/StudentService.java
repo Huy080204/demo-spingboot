@@ -1,33 +1,31 @@
 package com.example.demo.service;
 
-import com.example.demo.criteria.StudentCriteria;
-import com.example.demo.criteria.SubjectCriteria;
-import com.example.demo.dto.request.student.StudentCreateRequest;
-import com.example.demo.dto.request.student.StudentUpdateRequest;
-import com.example.demo.dto.response.PageResponse;
-import com.example.demo.dto.response.student.StudentResponse;
-import com.example.demo.dto.response.subject.SubjectResponse;
-import com.example.demo.entity.Student;
+import com.example.demo.dto.student.StudentDto;
+import com.example.demo.form.student.UpdateStudentForm;
+import com.example.demo.model.criteria.StudentCriteria;
+import com.example.demo.model.criteria.SubjectCriteria;
+import com.example.demo.form.student.CreateStudentForm;
+import com.example.demo.dto.PageResponseDto;
+import com.example.demo.dto.subject.SubjectDto;
+import com.example.demo.model.entity.Student;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface StudentService {
 
-    StudentResponse createStudent(StudentCreateRequest request);
+    StudentDto createStudent(CreateStudentForm request);
 
-    List<StudentResponse> getAllStudents();
+    List<StudentDto> getAllStudents();
 
-    StudentResponse getStudentResponseById(Long id);
+    StudentDto getStudentResponseById(Long id);
 
     Student getStudentById(Long id);
 
-    StudentResponse updateStudent(Long id, StudentUpdateRequest request);
+    StudentDto updateStudent(Long id, UpdateStudentForm request);
 
     void deleteStudent(Long id);
 
-    PageResponse<StudentResponse> getPageStudents(StudentCriteria studentCriteria, Pageable pageable);
-
-    PageResponse<SubjectResponse> getPageSubjectsByStudent(Long studentId, SubjectCriteria subjectCriteria, Pageable pageable);
+    PageResponseDto<StudentDto> getPageStudents(StudentCriteria studentCriteria, Pageable pageable);
 
 }

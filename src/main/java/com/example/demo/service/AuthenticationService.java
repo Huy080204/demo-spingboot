@@ -1,17 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.authentication.AuthenticationRequest;
-import com.example.demo.dto.request.authentication.IntrospectRequest;
-import com.example.demo.dto.response.authentication.AuthenticationResponse;
-import com.example.demo.dto.response.authentication.IntrospectResponse;
+import com.example.demo.form.authentication.AuthenticationForm;
+import com.example.demo.form.authentication.IntrospectForm;
+import com.example.demo.dto.authentication.AuthenticationDto;
+import com.example.demo.dto.authentication.IntrospectDto;
 
 import java.text.ParseException;
 import com.nimbusds.jose.JOSEException;
 
 public interface AuthenticationService {
 
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    AuthenticationDto authenticate(AuthenticationForm request);
 
-    IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
+    IntrospectDto introspect(IntrospectForm request) throws JOSEException, ParseException;
 
 }

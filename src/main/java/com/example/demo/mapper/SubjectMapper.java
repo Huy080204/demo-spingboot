@@ -1,13 +1,10 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.request.subject.SubjectCreateRequest;
-import com.example.demo.dto.request.subject.SubjectUpdateRequest;
-import com.example.demo.dto.response.subject.SubjectResponse;
-import com.example.demo.entity.Subject;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.example.demo.dto.subject.SubjectDto;
+import com.example.demo.form.subject.CreateSubjectForm;
+import com.example.demo.form.subject.UpdateSubjectForm;
+import com.example.demo.model.entity.Subject;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -15,16 +12,17 @@ import java.util.List;
 public interface SubjectMapper {
     @Mapping(source = "subjectName", target = "name")
     @Mapping(source = "subjectCode", target = "code")
-    Subject toSubject(SubjectCreateRequest request);
+    Subject toSubject(CreateSubjectForm request);
 
     @Mapping(source = "id", target = "subjectId")
     @Mapping(source = "name", target = "subjectName")
     @Mapping(source = "code", target = "subjectCode")
-    SubjectResponse toSubjectResponse(Subject subject);
+    @Named("toSubjectDto")
+    SubjectDto toSubjectResponse(Subject subject);
 
-    @IterableMapping(elementTargetType = SubjectResponse.class)
-    List<SubjectResponse> toSubjectResponseList(List<Subject> subjects);
+    @IterableMapping(elementTargetType = SubjectDto.class)
+    List<SubjectDto> toSubjectResponseList(List<Subject> subjects);
 
     @Mapping(source = "subjectName", target = "name")
-    void updateSubject(@MappingTarget Subject subject, SubjectUpdateRequest request);
+    void updateSubject(@MappingTarget Subject subject, UpdateSubjectForm request);
 }

@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.response.studentSubject.StudentSubjectResponse;
-import com.example.demo.entity.Student;
-import com.example.demo.entity.StudentSubject;
-import com.example.demo.entity.Subject;
+import com.example.demo.dto.studentSubject.StudentSubjectDto;
+import com.example.demo.model.entity.Student;
+import com.example.demo.model.entity.StudentSubject;
+import com.example.demo.model.entity.Subject;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.enumeration.StudentSubjectStatus;
 import com.example.demo.exception.AppException;
@@ -25,7 +25,7 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
     StudentSubjectMapper studentSubjectMapper;
 
     @Override
-    public StudentSubjectResponse createStudentSubject(Student student, Subject subject) {
+    public StudentSubjectDto createStudentSubject(Student student, Subject subject) {
         StudentSubject studentSubject = StudentSubject.builder()
                 .student(student)
                 .subject(subject)
@@ -33,7 +33,7 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
                 .status(StudentSubjectStatus.PENDING)
                 .build();
 
-        return studentSubjectMapper.toStudentSubjectResponse(studentSubjectRepository.save(studentSubject));
+        return studentSubjectMapper.toStudentSubjectDto(studentSubjectRepository.save(studentSubject));
     }
 
     @Override
@@ -43,16 +43,16 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
     }
 
     @Override
-    public StudentSubjectResponse getStudentSubjectResponseById(Long id) {
-        return studentSubjectMapper.toStudentSubjectResponse(studentSubjectRepository.findById(id)
+    public StudentSubjectDto getStudentSubjectResponseById(Long id) {
+        return studentSubjectMapper.toStudentSubjectDto(studentSubjectRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
     @Override
-    public StudentSubjectResponse updateStudentSubject(Long id) {
+    public StudentSubjectDto updateStudentSubject(Long id) {
         StudentSubject studentSubject = getStudentSubjectById(id);
         studentSubject.setStatus(StudentSubjectStatus.ACTIVE);
-        return studentSubjectMapper.toStudentSubjectResponse(studentSubjectRepository.save(studentSubject));
+        return studentSubjectMapper.toStudentSubjectDto(studentSubjectRepository.save(studentSubject));
     }
 
     @Override
