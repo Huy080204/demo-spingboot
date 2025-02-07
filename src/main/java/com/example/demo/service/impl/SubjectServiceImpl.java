@@ -1,32 +1,27 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.criteria.SubjectCriteria;
-import com.example.demo.dto.request.subject.SubjectCreateRequest;
-import com.example.demo.dto.request.subject.SubjectUpdateRequest;
-import com.example.demo.dto.response.PageResponse;
-import com.example.demo.dto.response.student.StudentResponse;
-import com.example.demo.dto.response.subject.SubjectResponse;
-import com.example.demo.entity.Student;
-import com.example.demo.entity.Subject;
+import com.example.demo.dto.subject.SubjectDto;
+import com.example.demo.form.subject.UpdateSubjectForm;
+import com.example.demo.model.criteria.SubjectCriteria;
+import com.example.demo.form.subject.CreateSubjectForm;
+import com.example.demo.dto.PageResponseDto;
+import com.example.demo.model.entity.Student;
+import com.example.demo.model.entity.StudentSubject;
+import com.example.demo.model.entity.Subject;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.SubjectService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Join;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -37,7 +32,7 @@ public class SubjectServiceImpl implements SubjectService {
     SubjectMapper subjectMapper;
 
     @Override
-    public SubjectResponse createSubject(SubjectCreateRequest request) {
+    public SubjectDto createSubject(CreateSubjectForm request) {
         if (subjectRepository.existsByCode(request.getSubjectCode())) {
             throw new AppException(ErrorCode.SUBJECT_CODE_EXITED);
         }
@@ -48,12 +43,12 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<SubjectResponse> getAllSubjects() {
+    public List<SubjectDto> getAllSubjects() {
         return subjectMapper.toSubjectResponseList(subjectRepository.findAll());
     }
 
     @Override
-    public SubjectResponse getSubjectResponseById(Long id) {
+    public SubjectDto getSubjectResponseById(Long id) {
         return subjectMapper.toSubjectResponse(subjectRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.SUBJECT_NOT_FOUND)));
     }
@@ -65,7 +60,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public SubjectResponse updateSubject(Long id, SubjectUpdateRequest request) {
+    public SubjectDto updateSubject(Long id, UpdateSubjectForm request) {
         Subject subject = getSubjectById(id);
 
         subjectMapper.updateSubject(subject, request);
@@ -80,10 +75,10 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public PageResponse<SubjectResponse> getPageSubjects(SubjectCriteria subjectCriteria, Pageable pageable) {
+    public PageResponseDto<SubjectDto> getPageSubjects(SubjectCriteria subjectCriteria, Pageable pageable) {
         Page<Subject> pageData = subjectRepository.findAll(subjectCriteria.getCriteria(), pageable);
 
-        return PageResponse.<SubjectResponse>builder()
+        return PageResponseDto.<SubjectDto>builder()
                 .currentPage(pageable.getPageNumber())
                 .totalPages(pageData.getTotalPages())
                 .pageSize(pageable.getPageSize())
@@ -91,4 +86,5 @@ public class SubjectServiceImpl implements SubjectService {
                 .data(subjectMapper.toSubjectResponseList(pageData.getContent()))
                 .build();
     }
+
 }

@@ -1,10 +1,10 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.request.authentication.AuthenticationRequest;
-import com.example.demo.dto.request.authentication.IntrospectRequest;
-import com.example.demo.dto.response.authentication.AuthenticationResponse;
-import com.example.demo.dto.response.authentication.IntrospectResponse;
-import com.example.demo.entity.User;
+import com.example.demo.form.authentication.AuthenticationForm;
+import com.example.demo.form.authentication.IntrospectForm;
+import com.example.demo.dto.authentication.AuthenticationDto;
+import com.example.demo.dto.authentication.IntrospectDto;
+import com.example.demo.model.entity.User;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.repository.UserRepository;
@@ -40,7 +40,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     protected String SIGNER_KEY;
 
     @Override
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationDto authenticate(AuthenticationForm request) {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
@@ -51,20 +51,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         String token = generateToken(request.getUsername());
 
-        return AuthenticationResponse.builder()
+        return AuthenticationDto.builder()
                 .authenticated(true)
                 .token(token)
                 .build();
     }
 
     @Override
-    public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
+    public IntrospectDto introspect(IntrospectForm request) throws JOSEException, ParseException {
         String token = request.getToken();
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY);
         SignedJWT signedJWT = SignedJWT.parse(token);
         Date expiration = signedJWT.getJWTClaimsSet().getExpirationTime();
         boolean verified = signedJWT.verify(verifier);
-        return IntrospectResponse.builder()
+        return IntrospectDto.builder()
                 .valid(verified && expiration.after(new Date()))
                 .build();
     }

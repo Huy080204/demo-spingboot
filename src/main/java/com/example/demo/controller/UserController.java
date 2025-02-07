@@ -1,14 +1,13 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.post.PostCreateRequest;
-import com.example.demo.dto.request.user.UserCreateRequest;
-import com.example.demo.dto.request.user.UserUpdateRequest;
-import com.example.demo.dto.response.APIResponse;
-import com.example.demo.dto.response.user.UserResponse;
-import com.example.demo.entity.Post;
-import com.example.demo.entity.User;
+import com.example.demo.dto.user.UserDto;
+import com.example.demo.form.post.CreatePostForm;
+import com.example.demo.form.user.CreateUserForm;
+import com.example.demo.form.user.UpdateUserForm;
+import com.example.demo.dto.APIResponseDto;
+import com.example.demo.model.entity.Post;
+import com.example.demo.model.entity.User;
 import com.example.demo.service.PostService;
-import com.example.demo.service.impl.PostServiceImpl;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,8 +31,8 @@ public class UserController {
     PostService postService;
 
     @PostMapping
-    public ResponseEntity<APIResponse<UserResponse>> createUser(@RequestBody @Valid UserCreateRequest request) {
-        APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
+    public ResponseEntity<APIResponseDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
+        APIResponseDto<UserDto> response = APIResponseDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED))
                 .message("User created successfully")
@@ -44,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<APIResponse<List<UserResponse>>> getAllUsers() {
-        APIResponse<List<UserResponse>> response = APIResponse.<List<UserResponse>>builder()
+    public ResponseEntity<APIResponseDto<List<UserDto>>> getAllUsers() {
+        APIResponseDto<List<UserDto>> response = APIResponseDto.<List<UserDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all users successfully")
@@ -56,8 +55,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<APIResponse<UserResponse>> getUserById(@PathVariable("id") String id) {
-        APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
+    public ResponseEntity<APIResponseDto<UserDto>> getUserById(@PathVariable("id") String id) {
+        APIResponseDto<UserDto> response = APIResponseDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get user successfully")
@@ -68,8 +67,8 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<APIResponse<UserResponse>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UserUpdateRequest request) {
-        APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
+    public ResponseEntity<APIResponseDto<UserDto>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UpdateUserForm request) {
+        APIResponseDto<UserDto> response = APIResponseDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User updated successfully")
@@ -80,9 +79,9 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<APIResponse<Void>> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<APIResponseDto<Void>> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
-        APIResponse<Void> response = APIResponse.<Void>builder()
+        APIResponseDto<Void> response = APIResponseDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User deleted successfully")
@@ -92,11 +91,11 @@ public class UserController {
     }
 
     @PostMapping(path = "/{userId}/posts")
-    public ResponseEntity<APIResponse<Post>> createPost(@PathVariable("userId") String userId, @RequestBody @Valid PostCreateRequest request) {
+    public ResponseEntity<APIResponseDto<Post>> createPost(@PathVariable("userId") String userId, @RequestBody @Valid CreatePostForm request) {
         User user = userService.getUserById(userId);
         Post post = postService.createPost(user, request);
 
-        APIResponse<Post> response = APIResponse.<Post>builder()
+        APIResponseDto<Post> response = APIResponseDto.<Post>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Post created successfully")
@@ -107,10 +106,10 @@ public class UserController {
     }
 
     @GetMapping(path = "/{userId}/posts")
-    public ResponseEntity<APIResponse<List<Post>>> getAllPostByUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<APIResponseDto<List<Post>>> getAllPostByUser(@PathVariable("userId") String userId) {
         User user = userService.getUserById(userId);
 
-        APIResponse<List<Post>> response = APIResponse.<List<Post>>builder()
+        APIResponseDto<List<Post>> response = APIResponseDto.<List<Post>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Posts retrieved successfully")

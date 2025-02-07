@@ -1,22 +1,22 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.user.UserCreateRequest;
-import com.example.demo.dto.request.user.UserUpdateRequest;
-import com.example.demo.dto.response.user.UserResponse;
-import com.example.demo.entity.User;
+import com.example.demo.dto.user.UserDto;
+import com.example.demo.form.user.CreateUserForm;
+import com.example.demo.form.user.UpdateUserForm;
+import com.example.demo.model.entity.User;
 
 import java.util.List;
 
 public interface UserService {
-    UserResponse createUser(UserCreateRequest request);
+    UserDto createUser(CreateUserForm request);
 
-    List<UserResponse> getAllUsers();
+    List<UserDto> getAllUsers();
 
-    UserResponse getUserResponseById(String id);
+    UserDto getUserResponseById(String id);
 
     User getUserById(String id);
 
-    UserResponse updateUser(String id, UserUpdateRequest request);
+    UserDto updateUser(String id, UpdateUserForm request);
 
     void deleteUser(String id);
 }

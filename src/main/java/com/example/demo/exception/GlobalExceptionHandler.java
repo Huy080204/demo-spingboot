@@ -1,7 +1,7 @@
 package com.example.demo.exception;
 
-import com.example.demo.dto.response.APIResponse;
-import com.example.demo.dto.response.exception.FieldErrorResponse;
+import com.example.demo.dto.APIResponseDto;
+import com.example.demo.dto.exception.FieldErrorDto;
 import com.example.demo.enumeration.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,18 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIResponse<String>> handleAllException(Exception exception) {
-        APIResponse<String> response = APIResponse.<String>builder()
+    public ResponseEntity<APIResponseDto<String>> handleAllException(Exception exception) {
+        APIResponseDto<String> response = APIResponseDto.<String>builder()
                 .result(false)
-                .message(exception.getMessage())
-                .code("ERROR")
+                .message("INTERNAL SERVER ERROR: " + exception.getMessage())
+                .code("INTERNAL_SERVER_ERROR")
                 .build();
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<APIResponse<String>> handleAppException(AppException exception) {
-        APIResponse<String> response = APIResponse.<String>builder()
+    public ResponseEntity<APIResponseDto<String>> handleAppException(AppException exception) {
+        APIResponseDto<String> response = APIResponseDto.<String>builder()
                 .result(false)
                 .message(exception.getErrorCode().getMessage())
                 .code(exception.getErrorCode().getCode())
@@ -41,14 +41,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<APIResponse<List<FieldErrorResponse>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<APIResponseDto<List<FieldErrorDto>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         ErrorCode errorCode = ErrorCode.INVALID_FORM;
 
-        List<FieldErrorResponse> errors = exception.getFieldErrors().stream()
-                .map(fieldError -> new FieldErrorResponse(fieldError.getField(), fieldError.getDefaultMessage()))
+        List<FieldErrorDto> errors = exception.getFieldErrors().stream()
+                .map(fieldError -> new FieldErrorDto(fieldError.getField(), fieldError.getDefaultMessage()))
                 .collect(Collectors.toList());
 
-        APIResponse<List<FieldErrorResponse>> response = APIResponse.<List<FieldErrorResponse>>builder()
+        APIResponseDto<List<FieldErrorDto>> response = APIResponseDto.<List<FieldErrorDto>>builder()
                 .result(false)
                 .message(errorCode.getMessage())
                 .code(errorCode.getCode())
@@ -58,8 +58,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<APIResponse<String>> handleNotFoundException(NoHandlerFoundException exception) {
-        APIResponse<String> response = APIResponse.<String>builder()
+    public ResponseEntity<APIResponseDto<String>> handleNotFoundException(NoHandlerFoundException exception) {
+        APIResponseDto<String> response = APIResponseDto.<String>builder()
                 .result(false)
                 .message("The requested resource was not found: " + exception.getRequestURL())
                 .code("NOT_FOUND")
@@ -68,8 +68,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<APIResponse<String>> handleResponseStatusException(ResponseStatusException exception) {
-        APIResponse<String> response = APIResponse.<String>builder()
+    public ResponseEntity<APIResponseDto<String>> handleResponseStatusException(ResponseStatusException exception) {
+        APIResponseDto<String> response = APIResponseDto.<String>builder()
                 .result(false)
                 .message(exception.getReason())
                 .code(exception.getStatusCode().toString())

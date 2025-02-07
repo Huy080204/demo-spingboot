@@ -1,12 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.studentSubject.StudentSubjectCreateRequest;
-import com.example.demo.dto.response.APIResponse;
-import com.example.demo.dto.response.student.StudentResponse;
-import com.example.demo.dto.response.studentSubject.StudentSubjectResponse;
-import com.example.demo.entity.Student;
-import com.example.demo.entity.StudentSubject;
-import com.example.demo.entity.Subject;
+import com.example.demo.dto.studentSubject.StudentSubjectDto;
+import com.example.demo.form.studentSubject.CreateStudentSubjectForm;
+import com.example.demo.dto.APIResponseDto;
+import com.example.demo.model.entity.Student;
+import com.example.demo.model.entity.Subject;
 import com.example.demo.service.StudentService;
 import com.example.demo.service.StudentSubjectService;
 import com.example.demo.service.SubjectService;
@@ -21,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/student-subjects")
+@RequestMapping("/api/student-subject")
 
 public class StudentSubjectController {
 
@@ -29,14 +27,15 @@ public class StudentSubjectController {
     SubjectService subjectService;
     StudentSubjectService studentSubjectService;
 
-    @PostMapping
-    public ResponseEntity<APIResponse<StudentSubjectResponse>> createStudentSubject(@Valid @RequestBody StudentSubjectCreateRequest request) {
+    // create
+    @PostMapping(path = "/create")
+    public ResponseEntity<APIResponseDto<StudentSubjectDto>> createStudentSubject(@Valid @RequestBody CreateStudentSubjectForm request) {
         Student student = studentService.getStudentById(request.getStudentId());
         Subject subject = subjectService.getSubjectById(request.getSubjectId());
 
-        StudentSubjectResponse studentSubject = studentSubjectService.createStudentSubject(student, subject);
+        StudentSubjectDto studentSubject = studentSubjectService.createStudentSubject(student, subject);
 
-        APIResponse<StudentSubjectResponse> response = APIResponse.<StudentSubjectResponse>builder()
+        APIResponseDto<StudentSubjectDto> response = APIResponseDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Create student subject successfully")
@@ -46,11 +45,12 @@ public class StudentSubjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<APIResponse<StudentSubjectResponse>> getStudentSubjectById(@PathVariable("id") Long id) {
-        StudentSubjectResponse studentSubject = studentSubjectService.getStudentSubjectResponseById(id);
+    // get by id
+    @GetMapping(path = "/get-by-id/{id}")
+    public ResponseEntity<APIResponseDto<StudentSubjectDto>> getById(@PathVariable("id") Long id) {
+        StudentSubjectDto studentSubject = studentSubjectService.getStudentSubjectResponseById(id);
 
-        APIResponse<StudentSubjectResponse> response = APIResponse.<StudentSubjectResponse>builder()
+        APIResponseDto<StudentSubjectDto> response = APIResponseDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get successfully")
@@ -60,11 +60,12 @@ public class StudentSubjectController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<APIResponse<StudentSubjectResponse>> updateStudentSubject(@PathVariable("id") Long id) {
-        StudentSubjectResponse studentSubject = studentSubjectService.updateStudentSubject(id);
+    // update
+    @PutMapping(path = "/update/{id}")
+    public ResponseEntity<APIResponseDto<StudentSubjectDto>> update(@PathVariable("id") Long id) {
+        StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(id);
 
-        APIResponse<StudentSubjectResponse> response = APIResponse.<StudentSubjectResponse>builder()
+        APIResponseDto<StudentSubjectDto> response = APIResponseDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get successfully")
@@ -74,11 +75,12 @@ public class StudentSubjectController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<APIResponse<Void>> deleteStudentSubjectById(@PathVariable("id") Long id) {
-        StudentSubjectResponse studentSubject = studentSubjectService.updateStudentSubject(id);
+    // delete by id
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<APIResponseDto<Void>> delete(@PathVariable("id") Long id) {
+        StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(id);
 
-        APIResponse<Void> response = APIResponse.<Void>builder()
+        APIResponseDto<Void> response = APIResponseDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Delete successfully")

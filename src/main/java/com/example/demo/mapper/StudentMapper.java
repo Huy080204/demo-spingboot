@@ -1,30 +1,40 @@
 package com.example.demo.mapper;
 
-import com.example.demo.dto.request.student.StudentCreateRequest;
-import com.example.demo.dto.request.student.StudentUpdateRequest;
-import com.example.demo.dto.response.student.StudentResponse;
-import com.example.demo.dto.response.subject.SubjectResponse;
-import com.example.demo.entity.Student;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.springframework.data.domain.Page;
+import com.example.demo.enumeration.Gender;
+import com.example.demo.form.student.CreateStudentForm;
+import com.example.demo.form.student.UpdateStudentForm;
+import com.example.demo.dto.student.StudentDto;
+import com.example.demo.mapper.helper.StudentMapperHelper;
+import com.example.demo.model.entity.Student;
+import org.mapstruct.*;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
     @Mapping(source = "dateOfBirth", target = "birthDate")
-    Student toStudent(StudentCreateRequest request);
+    @Mapping(source = "gender", target = "gender", qualifiedByName = "genderToInteger")
+    Student toStudent(CreateStudentForm request);
 
     @Mapping(source = "id", target = "studentId")
     @Mapping(source = "birthDate", target = "dateOfBirth")
-    StudentResponse toStudentResponse(Student student);
+    @Mapping(source = "gender", target = "gender", qualifiedByName = "integerToGender")
+    StudentDto toStudentResponse(Student student);
 
-    @IterableMapping(elementTargetType = StudentResponse.class)
-    List<StudentResponse> toStudentResponseList(List<Student> students);
+    @IterableMapping(elementTargetType = StudentDto.class)
+    List<StudentDto> toStudentResponseList(List<Student> students);
 
     @Mapping(source = "dateOfBirth", target = "birthDate")
-    void updateStudent(@MappingTarget Student student, StudentUpdateRequest request);
+    @Mapping(source = "gender", target = "gender", qualifiedByName = "genderToInteger")
+    void updateStudent(@MappingTarget Student student, UpdateStudentForm request);
+
+    @Named("genderToInteger")
+    static Integer genderToInteger(Gender gender) {
+        return (gender != null) ? gender.getValue() : null;
+    }
+
+    @Named("integerToGender")
+    static Gender integerToGender(Integer gender) {
+        return (gender != null) ? Gender.fromInt(gender) : null;
+    }
 }

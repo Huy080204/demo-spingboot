@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.request.user.UserCreateRequest;
-import com.example.demo.dto.request.user.UserUpdateRequest;
-import com.example.demo.dto.response.user.UserResponse;
-import com.example.demo.entity.User;
+import com.example.demo.dto.user.UserDto;
+import com.example.demo.form.user.CreateUserForm;
+import com.example.demo.form.user.UpdateUserForm;
+import com.example.demo.model.entity.User;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.UserMapper;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     UserMapper userMapper;
 
     @Override
-    public UserResponse createUser(UserCreateRequest request) {
+    public UserDto createUser(CreateUserForm request) {
 
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXITED);
@@ -41,12 +41,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponse> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return userMapper.toUserResponseList(userRepository.findAll());
     }
 
     @Override
-    public UserResponse getUserResponseById(String id) {
+    public UserDto getUserResponseById(String id) {
         return userMapper.toUserResponse(userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(String id, UserUpdateRequest request) {
+    public UserDto updateUser(String id, UpdateUserForm request) {
         User user = getUserById(id);
 
         userMapper.updateUser(user, request);

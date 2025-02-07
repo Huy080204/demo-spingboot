@@ -1,10 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.request.authentication.AuthenticationRequest;
-import com.example.demo.dto.request.authentication.IntrospectRequest;
-import com.example.demo.dto.response.APIResponse;
-import com.example.demo.dto.response.authentication.AuthenticationResponse;
-import com.example.demo.dto.response.authentication.IntrospectResponse;
+import com.example.demo.form.authentication.AuthenticationForm;
+import com.example.demo.form.authentication.IntrospectForm;
+import com.example.demo.dto.APIResponseDto;
+import com.example.demo.dto.authentication.AuthenticationDto;
+import com.example.demo.dto.authentication.IntrospectDto;
 import com.example.demo.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import lombok.AccessLevel;
@@ -28,10 +28,10 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/log-in")
-    public ResponseEntity<APIResponse<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
-        AuthenticationResponse authenticationResponse = authenticationService.authenticate(authenticationRequest);
+    public ResponseEntity<APIResponseDto<AuthenticationDto>> authenticate(@RequestBody AuthenticationForm authenticationRequest) {
+        AuthenticationDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
 
-        APIResponse<AuthenticationResponse> response = APIResponse.<AuthenticationResponse>builder()
+        APIResponseDto<AuthenticationDto> response = APIResponseDto.<AuthenticationDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")
@@ -42,10 +42,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/introspect")
-    public ResponseEntity<APIResponse<IntrospectResponse>> introspect(@RequestBody IntrospectRequest introspectRequest) throws ParseException, JOSEException {
-        IntrospectResponse introspectResponse = authenticationService.introspect(introspectRequest);
+    public ResponseEntity<APIResponseDto<IntrospectDto>> introspect(@RequestBody IntrospectForm introspectRequest) throws ParseException, JOSEException {
+        IntrospectDto introspectResponse = authenticationService.introspect(introspectRequest);
 
-        APIResponse<IntrospectResponse> response = APIResponse.<IntrospectResponse>builder()
+        APIResponseDto<IntrospectDto> response = APIResponseDto.<IntrospectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")
