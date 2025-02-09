@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
+import com.example.demo.form.studentSubject.UpdateStudentSubjectForm;
 import com.example.demo.model.entity.Student;
 import com.example.demo.model.entity.StudentSubject;
 import com.example.demo.model.entity.Subject;
@@ -49,9 +50,17 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
     }
 
     @Override
-    public StudentSubjectDto updateStudentSubject(Long id) {
-        StudentSubject studentSubject = getStudentSubjectById(id);
-        studentSubject.setStatus(StudentSubjectStatus.ACTIVE);
+    public StudentSubjectDto updateStudentSubject(Student student, Subject subject, StudentSubjectStatus status, Boolean done) {
+        StudentSubject studentSubject = studentSubjectRepository.findByStudentAndSubject(student, subject);
+        if (studentSubject == null) {
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+        }
+        if (status != null) {
+            studentSubject.setStatus(status);
+        }
+        if (done != null) {
+            studentSubject.setDone(done);
+        }
         return studentSubjectMapper.toStudentSubjectDto(studentSubjectRepository.save(studentSubject));
     }
 

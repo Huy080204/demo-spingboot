@@ -33,4 +33,7 @@ public class StudentSubject {
 
     @Column(nullable = false)
     StudentSubjectStatus status;
+
+    @Column(nullable = false)
+    boolean done = false;
 }

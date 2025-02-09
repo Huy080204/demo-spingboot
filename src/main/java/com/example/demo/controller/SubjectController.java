@@ -6,6 +6,10 @@ import com.example.demo.form.subject.UpdateSubjectForm;
 import com.example.demo.dto.APIResponseDto;
 import com.example.demo.dto.PageResponseDto;
 import com.example.demo.dto.subject.SubjectDto;
+import com.example.demo.model.entity.StudentSubject;
+import com.example.demo.model.entity.Subject;
+import com.example.demo.repository.StudentSubjectRepository;
+import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.SubjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,6 +31,7 @@ import java.util.List;
 public class SubjectController {
 
     SubjectService subjectService;
+    StudentSubjectRepository studentSubjectRepository;
 
     // create
     @PostMapping(path = "/create")
@@ -59,7 +64,7 @@ public class SubjectController {
     }
 
     // get by id
-    @GetMapping(path = "/get-by-id/{id}")
+    @GetMapping(path = "/get/{id}")
     public ResponseEntity<APIResponseDto<SubjectDto>> getById(@PathVariable("id") Long id) {
         SubjectDto subjectResponse = subjectService.getSubjectResponseById(id);
 
@@ -117,6 +122,20 @@ public class SubjectController {
                 .message("Get subject successfully")
                 .data(pageResponse)
                 .build();
+    }
+
+    // check all student done
+    @GetMapping("/{subjectId}/all-done")
+    public ResponseEntity<String> checkIfAllStudentsDone(@PathVariable Long subjectId) {
+        Subject subject = subjectService.getSubjectById(subjectId);
+        List<StudentSubject> studentSubjects = studentSubjectRepository.findBySubject(subject);
+        boolean allDone = studentSubjects.stream().allMatch(StudentSubject::isDone);
+
+        if (allDone) {
+            return ResponseEntity.ok("All students in subject " + subjectId + " have completed.");
+        } else {
+            return ResponseEntity.ok("Some students in subject " + subjectId + " have not completed.");
+        }
     }
 
 }
