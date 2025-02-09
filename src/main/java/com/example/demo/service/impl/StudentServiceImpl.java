@@ -20,6 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -29,6 +32,8 @@ public class StudentServiceImpl implements StudentService {
 
     StudentRepository studentRepository;
     StudentMapper studentMapper;
+
+    DataSource dataSource;
 
     // create
     @Override
@@ -78,8 +83,16 @@ public class StudentServiceImpl implements StudentService {
     // delete by id
     @Override
     public void deleteStudent(Long id) {
+//        try (Connection connection = dataSource.getConnection()) {
+//            connection.setAutoCommit(false);
+
         getStudentById(id);
         studentRepository.deleteById(id);
+
+//            connection.commit();
+//        } catch (SQLException e) {
+//            throw new RuntimeException("Error deleting student", e);
+//        }
     }
 
     // get list paging and filtering

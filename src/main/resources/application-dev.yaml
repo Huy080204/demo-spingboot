@@ -5,7 +5,9 @@ spring:
     url: jdbc:mysql://localhost:4000/demo_service
     username: root
     password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
