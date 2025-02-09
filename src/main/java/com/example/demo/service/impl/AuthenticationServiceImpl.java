@@ -4,9 +4,11 @@ import com.example.demo.form.authentication.AuthenticationForm;
 import com.example.demo.form.authentication.IntrospectForm;
 import com.example.demo.dto.authentication.AuthenticationDto;
 import com.example.demo.dto.authentication.IntrospectDto;
+import com.example.demo.model.Student;
 import com.example.demo.model.User;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
+import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AuthenticationService;
 import com.nimbusds.jose.*;
@@ -34,6 +36,7 @@ import java.util.Date;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     UserRepository userRepository;
+    StudentRepository studentRepository;
 
     @NonFinal
     @Value("${jwt.signerKey}")
@@ -41,11 +44,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationDto authenticate(AuthenticationForm request) {
-        User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Student student = studentRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ErrorCode.STUDENT_NOT_FOUND));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
+        boolean authenticated = passwordEncoder.matches(request.getPassword(), student.getPassword());
         if (!authenticated) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
@@ -77,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .issuer("demo.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli())
+                        Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli())
                 )
                 .claim("authorities", "ROLE_USER")
                 .build();
