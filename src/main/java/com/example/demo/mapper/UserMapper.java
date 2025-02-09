@@ -3,7 +3,7 @@ package com.example.demo.mapper;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
-import com.example.demo.model.entity.User;
+import com.example.demo.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 

@@ -4,7 +4,7 @@ import com.example.demo.form.authentication.AuthenticationForm;
 import com.example.demo.form.authentication.IntrospectForm;
 import com.example.demo.dto.authentication.AuthenticationDto;
 import com.example.demo.dto.authentication.IntrospectDto;
-import com.example.demo.model.entity.User;
+import com.example.demo.model.User;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.repository.UserRepository;

@@ -3,7 +3,7 @@ package com.example.demo.mapper;
 import com.example.demo.dto.subject.SubjectDto;
 import com.example.demo.form.subject.CreateSubjectForm;
 import com.example.demo.form.subject.UpdateSubjectForm;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Subject;
 import org.mapstruct.*;
 
 import java.util.List;

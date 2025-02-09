@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @Builder
-public class APIResponseDto<T> {
+public class APIMessageDto<T> {
     boolean result = true;
     String code = null;
     String message = null;

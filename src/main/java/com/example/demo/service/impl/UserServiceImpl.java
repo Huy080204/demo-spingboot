@@ -3,7 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
-import com.example.demo.model.entity.User;
+import com.example.demo.model.User;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.UserMapper;

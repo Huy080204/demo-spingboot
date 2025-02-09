@@ -1,6 +1,6 @@
 package com.example.demo.exception;
 
-import com.example.demo.dto.APIResponseDto;
+import com.example.demo.dto.APIMessageDto;
 import com.example.demo.dto.exception.FieldErrorDto;
 import com.example.demo.enumeration.ErrorCode;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIResponseDto<String>> handleAllException(Exception exception) {
-        APIResponseDto<String> response = APIResponseDto.<String>builder()
+    public ResponseEntity<APIMessageDto<String>> handleAllException(Exception exception) {
+        APIMessageDto<String> response = APIMessageDto.<String>builder()
                 .result(false)
                 .message("INTERNAL SERVER ERROR: " + exception.getMessage())
                 .code("INTERNAL_SERVER_ERROR")
@@ -28,8 +28,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AppException.class)
-    public ResponseEntity<APIResponseDto<String>> handleAppException(AppException exception) {
-        APIResponseDto<String> response = APIResponseDto.<String>builder()
+    public ResponseEntity<APIMessageDto<String>> handleAppException(AppException exception) {
+        APIMessageDto<String> response = APIMessageDto.<String>builder()
                 .result(false)
                 .message(exception.getErrorCode().getMessage())
                 .code(exception.getErrorCode().getCode())
@@ -41,14 +41,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<APIResponseDto<List<FieldErrorDto>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public ResponseEntity<APIMessageDto<List<FieldErrorDto>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         ErrorCode errorCode = ErrorCode.INVALID_FORM;
 
         List<FieldErrorDto> errors = exception.getFieldErrors().stream()
                 .map(fieldError -> new FieldErrorDto(fieldError.getField(), fieldError.getDefaultMessage()))
                 .collect(Collectors.toList());
 
-        APIResponseDto<List<FieldErrorDto>> response = APIResponseDto.<List<FieldErrorDto>>builder()
+        APIMessageDto<List<FieldErrorDto>> response = APIMessageDto.<List<FieldErrorDto>>builder()
                 .result(false)
                 .message(errorCode.getMessage())
                 .code(errorCode.getCode())
@@ -58,8 +58,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<APIResponseDto<String>> handleNotFoundException(NoHandlerFoundException exception) {
-        APIResponseDto<String> response = APIResponseDto.<String>builder()
+    public ResponseEntity<APIMessageDto<String>> handleNotFoundException(NoHandlerFoundException exception) {
+        APIMessageDto<String> response = APIMessageDto.<String>builder()
                 .result(false)
                 .message("The requested resource was not found: " + exception.getRequestURL())
                 .code("NOT_FOUND")
@@ -68,8 +68,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<APIResponseDto<String>> handleResponseStatusException(ResponseStatusException exception) {
-        APIResponseDto<String> response = APIResponseDto.<String>builder()
+    public ResponseEntity<APIMessageDto<String>> handleResponseStatusException(ResponseStatusException exception) {
+        APIMessageDto<String> response = APIMessageDto.<String>builder()
                 .result(false)
                 .message(exception.getReason())
                 .code(exception.getStatusCode().toString())

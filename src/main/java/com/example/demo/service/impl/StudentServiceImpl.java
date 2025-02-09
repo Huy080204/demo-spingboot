@@ -5,7 +5,7 @@ import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.form.student.UpdateStudentForm;
 import com.example.demo.dto.PageResponseDto;
-import com.example.demo.model.entity.Student;
+import com.example.demo.model.Student;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.StudentMapper;
@@ -62,8 +62,8 @@ public class StudentServiceImpl implements StudentService {
 
     // update
     @Override
-    public StudentDto updateStudent(Long id, UpdateStudentForm request) {
-        Student student = getStudentById(id);
+    public StudentDto updateStudent(UpdateStudentForm request) {
+        Student student = getStudentById(request.getId());
 
         studentMapper.updateStudent(student, request);
 

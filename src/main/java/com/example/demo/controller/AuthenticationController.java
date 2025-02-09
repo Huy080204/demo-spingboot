@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.form.authentication.AuthenticationForm;
 import com.example.demo.form.authentication.IntrospectForm;
-import com.example.demo.dto.APIResponseDto;
+import com.example.demo.dto.APIMessageDto;
 import com.example.demo.dto.authentication.AuthenticationDto;
 import com.example.demo.dto.authentication.IntrospectDto;
 import com.example.demo.service.AuthenticationService;
@@ -28,10 +28,10 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/log-in")
-    public ResponseEntity<APIResponseDto<AuthenticationDto>> authenticate(@RequestBody AuthenticationForm authenticationRequest) {
+    public ResponseEntity<APIMessageDto<AuthenticationDto>> authenticate(@RequestBody AuthenticationForm authenticationRequest) {
         AuthenticationDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
 
-        APIResponseDto<AuthenticationDto> response = APIResponseDto.<AuthenticationDto>builder()
+        APIMessageDto<AuthenticationDto> response = APIMessageDto.<AuthenticationDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")
@@ -42,10 +42,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/introspect")
-    public ResponseEntity<APIResponseDto<IntrospectDto>> introspect(@RequestBody IntrospectForm introspectRequest) throws ParseException, JOSEException {
+    public ResponseEntity<APIMessageDto<IntrospectDto>> introspect(@RequestBody IntrospectForm introspectRequest) throws ParseException, JOSEException {
         IntrospectDto introspectResponse = authenticationService.introspect(introspectRequest);
 
-        APIResponseDto<IntrospectDto> response = APIResponseDto.<IntrospectDto>builder()
+        APIMessageDto<IntrospectDto> response = APIMessageDto.<IntrospectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")
