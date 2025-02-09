@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
 import com.example.demo.form.studentSubject.CreateStudentSubjectForm;
 import com.example.demo.dto.APIResponseDto;
+import com.example.demo.form.studentSubject.UpdateStudentSubjectForm;
 import com.example.demo.model.entity.Student;
 import com.example.demo.model.entity.Subject;
 import com.example.demo.service.StudentService;
@@ -46,7 +47,7 @@ public class StudentSubjectController {
     }
 
     // get by id
-    @GetMapping(path = "/get-by-id/{id}")
+    @GetMapping(path = "/get/{id}")
     public ResponseEntity<APIResponseDto<StudentSubjectDto>> getById(@PathVariable("id") Long id) {
         StudentSubjectDto studentSubject = studentSubjectService.getStudentSubjectResponseById(id);
 
@@ -61,29 +62,48 @@ public class StudentSubjectController {
     }
 
     // update
-    @PutMapping(path = "/update/{id}")
-    public ResponseEntity<APIResponseDto<StudentSubjectDto>> update(@PathVariable("id") Long id) {
-        StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(id);
+//    @PutMapping(path = "/update/{id}")
+//    public ResponseEntity<APIResponseDto<StudentSubjectDto>> update(@PathVariable("id") Long id) {
+//        StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(id);
+//
+//        APIResponseDto<StudentSubjectDto> response = APIResponseDto.<StudentSubjectDto>builder()
+//                .result(true)
+//                .code(String.valueOf(HttpStatus.OK.value()))
+//                .message("Get successfully")
+//                .data(studentSubject)
+//                .build();
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(response);
+//    }
+
+    // delete by id
+    @DeleteMapping(path = "/delete/{id}")
+    public ResponseEntity<APIResponseDto<Void>> delete(@PathVariable("id") Long id) {
+        studentSubjectService.deleteStudentSubjectById(id);
+
+        APIResponseDto<Void> response = APIResponseDto.<Void>builder()
+                .result(true)
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("Delete successfully")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    // update
+    @PutMapping(path = "/update")
+    public ResponseEntity<APIResponseDto<StudentSubjectDto>> update(@RequestBody UpdateStudentSubjectForm form) {
+
+        Student student = studentService.getStudentById(form.getStudentId());
+        Subject subject = subjectService.getSubjectById(form.getSubjectId());
+
+        StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(student, subject, form.getStatus(), form.getDone());
 
         APIResponseDto<StudentSubjectDto> response = APIResponseDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get successfully")
                 .data(studentSubject)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    // delete by id
-    @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<APIResponseDto<Void>> delete(@PathVariable("id") Long id) {
-        StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(id);
-
-        APIResponseDto<Void> response = APIResponseDto.<Void>builder()
-                .result(true)
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Delete successfully")
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

@@ -64,7 +64,7 @@ public class StudentController {
     }
 
     // get by id
-    @GetMapping(path = "/get-by-id/{id}")
+    @GetMapping(path = "/get/{id}")
     public ResponseEntity<APIResponseDto<StudentDto>> getStudentById(@PathVariable("id") Long id) {
         StudentDto studentResponse = studentService.getStudentResponseById(id);
 
