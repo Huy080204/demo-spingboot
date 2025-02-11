@@ -1,4 +1,4 @@
-package com.example.demo.model.entity;
+package com.example.demo.model;
 
 import com.example.demo.enumeration.StudentSubjectStatus;
 import jakarta.persistence.*;

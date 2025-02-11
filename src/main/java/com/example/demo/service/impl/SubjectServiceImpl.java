@@ -5,21 +5,17 @@ import com.example.demo.form.subject.UpdateSubjectForm;
 import com.example.demo.model.criteria.SubjectCriteria;
 import com.example.demo.form.subject.CreateSubjectForm;
 import com.example.demo.dto.PageResponseDto;
-import com.example.demo.model.entity.Student;
-import com.example.demo.model.entity.StudentSubject;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Subject;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.SubjectMapper;
 import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.SubjectService;
-import jakarta.persistence.criteria.Join;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -60,8 +56,8 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public SubjectDto updateSubject(Long id, UpdateSubjectForm request) {
-        Subject subject = getSubjectById(id);
+    public SubjectDto updateSubject(UpdateSubjectForm request) {
+        Subject subject = getSubjectById(request.getId());
 
         subjectMapper.updateSubject(subject, request);
 

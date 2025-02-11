@@ -2,9 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
 import com.example.demo.enumeration.StudentSubjectStatus;
-import com.example.demo.model.entity.Student;
-import com.example.demo.model.entity.StudentSubject;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentSubject;
+import com.example.demo.model.Subject;
 
 public interface StudentSubjectService {
 

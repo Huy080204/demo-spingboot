@@ -1,8 +1,8 @@
 package com.example.demo.model.criteria;
 
-import com.example.demo.model.entity.Student;
-import com.example.demo.model.entity.StudentSubject;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentSubject;
+import com.example.demo.model.Subject;
 import jakarta.persistence.criteria.*;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;

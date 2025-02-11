@@ -4,9 +4,9 @@ import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.post.CreatePostForm;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
-import com.example.demo.dto.APIResponseDto;
-import com.example.demo.model.entity.Post;
-import com.example.demo.model.entity.User;
+import com.example.demo.dto.APIMessageDto;
+import com.example.demo.model.Post;
+import com.example.demo.model.User;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,8 +31,8 @@ public class UserController {
     PostService postService;
 
     @PostMapping
-    public ResponseEntity<APIResponseDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
-        APIResponseDto<UserDto> response = APIResponseDto.<UserDto>builder()
+    public ResponseEntity<APIMessageDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
+        APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED))
                 .message("User created successfully")
@@ -43,8 +43,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<APIResponseDto<List<UserDto>>> getAllUsers() {
-        APIResponseDto<List<UserDto>> response = APIResponseDto.<List<UserDto>>builder()
+    public ResponseEntity<APIMessageDto<List<UserDto>>> getAllUsers() {
+        APIMessageDto<List<UserDto>> response = APIMessageDto.<List<UserDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all users successfully")
@@ -55,8 +55,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<APIResponseDto<UserDto>> getUserById(@PathVariable("id") String id) {
-        APIResponseDto<UserDto> response = APIResponseDto.<UserDto>builder()
+    public ResponseEntity<APIMessageDto<UserDto>> getUserById(@PathVariable("id") String id) {
+        APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get user successfully")
@@ -67,8 +67,8 @@ public class UserController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<APIResponseDto<UserDto>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UpdateUserForm request) {
-        APIResponseDto<UserDto> response = APIResponseDto.<UserDto>builder()
+    public ResponseEntity<APIMessageDto<UserDto>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UpdateUserForm request) {
+        APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User updated successfully")
@@ -79,9 +79,9 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<APIResponseDto<Void>> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<APIMessageDto<Void>> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
-        APIResponseDto<Void> response = APIResponseDto.<Void>builder()
+        APIMessageDto<Void> response = APIMessageDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User deleted successfully")
@@ -91,11 +91,11 @@ public class UserController {
     }
 
     @PostMapping(path = "/{userId}/posts")
-    public ResponseEntity<APIResponseDto<Post>> createPost(@PathVariable("userId") String userId, @RequestBody @Valid CreatePostForm request) {
+    public ResponseEntity<APIMessageDto<Post>> createPost(@PathVariable("userId") String userId, @RequestBody @Valid CreatePostForm request) {
         User user = userService.getUserById(userId);
         Post post = postService.createPost(user, request);
 
-        APIResponseDto<Post> response = APIResponseDto.<Post>builder()
+        APIMessageDto<Post> response = APIMessageDto.<Post>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Post created successfully")
@@ -106,10 +106,10 @@ public class UserController {
     }
 
     @GetMapping(path = "/{userId}/posts")
-    public ResponseEntity<APIResponseDto<List<Post>>> getAllPostByUser(@PathVariable("userId") String userId) {
+    public ResponseEntity<APIMessageDto<List<Post>>> getAllPostByUser(@PathVariable("userId") String userId) {
         User user = userService.getUserById(userId);
 
-        APIResponseDto<List<Post>> response = APIResponseDto.<List<Post>>builder()
+        APIMessageDto<List<Post>> response = APIMessageDto.<List<Post>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Posts retrieved successfully")

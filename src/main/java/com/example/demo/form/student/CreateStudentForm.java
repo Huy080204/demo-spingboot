@@ -2,10 +2,7 @@ package com.example.demo.form.student;
 
 import com.example.demo.enumeration.Gender;
 import com.example.demo.validation.ValidGender;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -19,8 +16,12 @@ public class CreateStudentForm {
     @NotEmpty(message = "Username cannot be null or empty")
     String username;
 
-    @NotEmpty(message = "Username cannot be null or empty")
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @NotEmpty(message = "Password cannot be null or empty")
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    @Pattern(
+            regexp = "^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{6,}$",
+            message = "Password must contain at least one uppercase letter, one special character"
+    )
     String password;
 
     @NotEmpty(message = "Full name cannot be null or empty")

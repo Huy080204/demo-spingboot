@@ -1,10 +1,11 @@
-package com.example.demo.model.entity;
+package com.example.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,18 +16,28 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Subject {
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false)
-    String name;
-
     @Column(nullable = false, unique = true)
-    String code;
+    String username;
+
+    @Column(nullable = false)
+    String password;
+
+    @Column(nullable = false)
+    String fullName;
+
+    @Column(nullable = false)
+    LocalDate birthDate;
+
+    @Column(nullable = true)
+    Integer gender;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<StudentSubject> studentSubjects = new ArrayList<>();
+
 }

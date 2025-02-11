@@ -5,7 +5,7 @@ import com.example.demo.form.subject.CreateSubjectForm;
 import com.example.demo.form.subject.UpdateSubjectForm;
 import com.example.demo.model.criteria.SubjectCriteria;
 import com.example.demo.dto.PageResponseDto;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Subject;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public interface SubjectService {
 
     Subject getSubjectById(Long id);
 
-    SubjectDto updateSubject(Long id, UpdateSubjectForm request);
+    SubjectDto updateSubject(UpdateSubjectForm request);
 
     void deleteSubject(Long id);
 

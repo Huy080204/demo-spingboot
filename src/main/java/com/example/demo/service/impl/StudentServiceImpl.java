@@ -5,7 +5,7 @@ import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.form.student.UpdateStudentForm;
 import com.example.demo.dto.PageResponseDto;
-import com.example.demo.model.entity.Student;
+import com.example.demo.model.Student;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.StudentMapper;
@@ -16,8 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -28,6 +31,10 @@ public class StudentServiceImpl implements StudentService {
     StudentRepository studentRepository;
     StudentMapper studentMapper;
 
+    PasswordEncoder passwordEncoder;
+
+    DataSource dataSource;
+
     // create
     @Override
     public StudentDto createStudent(CreateStudentForm request) {
@@ -36,6 +43,8 @@ public class StudentServiceImpl implements StudentService {
         }
 
         Student student = studentMapper.toStudent(request);
+
+        student.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }
@@ -62,8 +71,8 @@ public class StudentServiceImpl implements StudentService {
 
     // update
     @Override
-    public StudentDto updateStudent(Long id, UpdateStudentForm request) {
-        Student student = getStudentById(id);
+    public StudentDto updateStudent(UpdateStudentForm request) {
+        Student student = getStudentById(request.getId());
 
         studentMapper.updateStudent(student, request);
 
@@ -73,8 +82,16 @@ public class StudentServiceImpl implements StudentService {
     // delete by id
     @Override
     public void deleteStudent(Long id) {
+//        try (Connection connection = dataSource.getConnection()) {
+//            connection.setAutoCommit(false);
+
         getStudentById(id);
         studentRepository.deleteById(id);
+
+//            connection.commit();
+//        } catch (SQLException e) {
+//            throw new RuntimeException("Error deleting student", e);
+//        }
     }
 
     // get list paging and filtering

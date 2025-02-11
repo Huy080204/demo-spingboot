@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.form.post.CreatePostForm;
-import com.example.demo.model.entity.Post;
-import com.example.demo.model.entity.User;
+import com.example.demo.model.Post;
+import com.example.demo.model.User;
 
 public interface PostService {
 

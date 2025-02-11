@@ -1,10 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
-import com.example.demo.form.studentSubject.UpdateStudentSubjectForm;
-import com.example.demo.model.entity.Student;
-import com.example.demo.model.entity.StudentSubject;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentSubject;
+import com.example.demo.model.Subject;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.enumeration.StudentSubjectStatus;
 import com.example.demo.exception.AppException;
@@ -51,17 +50,24 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
 
     @Override
     public StudentSubjectDto updateStudentSubject(Student student, Subject subject, StudentSubjectStatus status, Boolean done) {
-        StudentSubject studentSubject = studentSubjectRepository.findByStudentAndSubject(student, subject);
-        if (studentSubject == null) {
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-        }
-        if (status != null) {
+        StudentSubject studentSubject = studentSubjectRepository
+                .findByStudentAndSubject(student, subject)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        boolean updated = false;
+
+        if (status != null && !status.equals(studentSubject.getStatus())) {
             studentSubject.setStatus(status);
+            updated = true;
         }
-        if (done != null) {
+        if (done != null && done != studentSubject.isDone()) {
             studentSubject.setDone(done);
+            updated = true;
         }
-        return studentSubjectMapper.toStudentSubjectDto(studentSubjectRepository.save(studentSubject));
+
+        if (updated) {
+            studentSubject = studentSubjectRepository.save(studentSubject);
+        }
+        return studentSubjectMapper.toStudentSubjectDto(studentSubject);
     }
 
     @Override

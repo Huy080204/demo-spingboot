@@ -4,8 +4,7 @@ import com.example.demo.enumeration.Gender;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.form.student.UpdateStudentForm;
 import com.example.demo.dto.student.StudentDto;
-import com.example.demo.mapper.helper.StudentMapperHelper;
-import com.example.demo.model.entity.Student;
+import com.example.demo.model.Student;
 import org.mapstruct.*;
 
 import java.util.List;

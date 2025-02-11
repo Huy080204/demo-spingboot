@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.form.post.CreatePostForm;
-import com.example.demo.model.entity.Post;
+import com.example.demo.model.Post;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

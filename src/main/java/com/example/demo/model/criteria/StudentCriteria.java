@@ -1,6 +1,6 @@
 package com.example.demo.model.criteria;
 
-import com.example.demo.model.entity.Student;
+import com.example.demo.model.Student;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

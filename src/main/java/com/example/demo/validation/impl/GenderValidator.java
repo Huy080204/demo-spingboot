@@ -1,6 +1,8 @@
-package com.example.demo.validation;
+package com.example.demo.validation.impl;
 
+import com.example.demo.constant.GenderConstants;
 import com.example.demo.enumeration.Gender;
+import com.example.demo.validation.ValidGender;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -9,7 +11,6 @@ import java.util.Set;
 
 public class GenderValidator implements ConstraintValidator<ValidGender, Gender> {
     private boolean allowNull;
-    private static final Set<Gender> VALID_GENDERS = EnumSet.allOf(Gender.class);
 
     @Override
     public void initialize(ValidGender constraintAnnotation) {
@@ -21,6 +22,6 @@ public class GenderValidator implements ConstraintValidator<ValidGender, Gender>
         if (value == null) {
             return allowNull;
         }
-        return VALID_GENDERS.contains(value);
+        return GenderConstants.VALID_GENDERS.contains(value);
     }
 }

@@ -3,13 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.model.criteria.SubjectCriteria;
 import com.example.demo.form.subject.CreateSubjectForm;
 import com.example.demo.form.subject.UpdateSubjectForm;
-import com.example.demo.dto.APIResponseDto;
+import com.example.demo.dto.APIMessageDto;
 import com.example.demo.dto.PageResponseDto;
 import com.example.demo.dto.subject.SubjectDto;
-import com.example.demo.model.entity.StudentSubject;
-import com.example.demo.model.entity.Subject;
 import com.example.demo.repository.StudentSubjectRepository;
-import com.example.demo.repository.SubjectRepository;
 import com.example.demo.service.SubjectService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -35,10 +32,10 @@ public class SubjectController {
 
     // create
     @PostMapping(path = "/create")
-    public ResponseEntity<APIResponseDto<SubjectDto>> create(@RequestBody @Valid CreateSubjectForm request) {
+    public ResponseEntity<APIMessageDto<SubjectDto>> create(@RequestBody @Valid CreateSubjectForm request) {
         SubjectDto subjectResponse = subjectService.createSubject(request);
 
-        APIResponseDto<SubjectDto> response = APIResponseDto.<SubjectDto>builder()
+        APIMessageDto<SubjectDto> response = APIMessageDto.<SubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Subject created successfully")
@@ -50,10 +47,10 @@ public class SubjectController {
 
     // get all
     @GetMapping(path = "/list-all")
-    public ResponseEntity<APIResponseDto<List<SubjectDto>>> listAll() {
+    public ResponseEntity<APIMessageDto<List<SubjectDto>>> listAll() {
         List<SubjectDto> subjects = subjectService.getAllSubjects();
 
-        APIResponseDto<List<SubjectDto>> response = APIResponseDto.<List<SubjectDto>>builder()
+        APIMessageDto<List<SubjectDto>> response = APIMessageDto.<List<SubjectDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all subjects successfully")
@@ -65,10 +62,10 @@ public class SubjectController {
 
     // get by id
     @GetMapping(path = "/get/{id}")
-    public ResponseEntity<APIResponseDto<SubjectDto>> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<APIMessageDto<SubjectDto>> getById(@PathVariable("id") Long id) {
         SubjectDto subjectResponse = subjectService.getSubjectResponseById(id);
 
-        APIResponseDto<SubjectDto> response = APIResponseDto.<SubjectDto>builder()
+        APIMessageDto<SubjectDto> response = APIMessageDto.<SubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get subject successfully")
@@ -79,12 +76,11 @@ public class SubjectController {
     }
 
     // update
-    @PutMapping(path = "/update/{id}")
-    public ResponseEntity<APIResponseDto<SubjectDto>> update(@PathVariable("id") Long id,
-                                                             @RequestBody @Valid UpdateSubjectForm request) {
-        SubjectDto subjectResponse = subjectService.updateSubject(id, request);
+    @PutMapping(path = "/update")
+    public ResponseEntity<APIMessageDto<SubjectDto>> update(@RequestBody @Valid UpdateSubjectForm request) {
+        SubjectDto subjectResponse = subjectService.updateSubject(request);
 
-        APIResponseDto<SubjectDto> response = APIResponseDto.<SubjectDto>builder()
+        APIMessageDto<SubjectDto> response = APIMessageDto.<SubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Subject updated successfully")
@@ -96,10 +92,10 @@ public class SubjectController {
 
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<APIResponseDto<Void>> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<APIMessageDto<Void>> deleteById(@PathVariable("id") Long id) {
         subjectService.deleteSubject(id);
 
-        APIResponseDto<Void> response = APIResponseDto.<Void>builder()
+        APIMessageDto<Void> response = APIMessageDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Subject deleted successfully")
@@ -110,13 +106,13 @@ public class SubjectController {
 
     // paging and filtering
     @GetMapping(path = "/list")
-    public APIResponseDto<PageResponseDto<SubjectDto>> list(
+    public APIMessageDto<PageResponseDto<SubjectDto>> list(
             @ModelAttribute SubjectCriteria subjectCriteria,
             Pageable pageable
     ) {
         PageResponseDto<SubjectDto> pageResponse = subjectService.getPageSubjects(subjectCriteria, pageable);
 
-        return APIResponseDto.<PageResponseDto<SubjectDto>>builder()
+        return APIMessageDto.<PageResponseDto<SubjectDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get subject successfully")
@@ -127,11 +123,9 @@ public class SubjectController {
     // check all student done
     @GetMapping("/{subjectId}/all-done")
     public ResponseEntity<String> checkIfAllStudentsDone(@PathVariable Long subjectId) {
-        Subject subject = subjectService.getSubjectById(subjectId);
-        List<StudentSubject> studentSubjects = studentSubjectRepository.findBySubject(subject);
-        boolean allDone = studentSubjects.stream().allMatch(StudentSubject::isDone);
+        List<Long> completedSubjects = studentSubjectRepository.findSubjectsWithAllStudentsDone();
 
-        if (allDone) {
+        if (completedSubjects.contains(subjectId)) {
             return ResponseEntity.ok("All students in subject " + subjectId + " have completed.");
         } else {
             return ResponseEntity.ok("Some students in subject " + subjectId + " have not completed.");

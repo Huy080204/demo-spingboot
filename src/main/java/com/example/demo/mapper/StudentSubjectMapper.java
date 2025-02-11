@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
-import com.example.demo.model.entity.StudentSubject;
+import com.example.demo.model.StudentSubject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

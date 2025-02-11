@@ -1,11 +1,10 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.entity.Student;
-import com.example.demo.model.entity.StudentSubject;
-import com.example.demo.model.entity.Subject;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentSubject;
+import com.example.demo.model.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,6 +15,14 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubject, 
 
     List<StudentSubject> findBySubject(Subject subject);
 
-    StudentSubject findByStudentAndSubject(Student student, Subject subject);
+    Optional<StudentSubject> findByStudentAndSubject(Student student, Subject subject);
+
+    @Query("""
+                 SELECT ss.subject.id
+                 FROM StudentSubject ss
+                 GROUP BY ss.subject.id
+                 HAVING SUM(CASE WHEN ss.done = false THEN 1 ELSE 0 END) = 0
+            """)
+    List<Long> findSubjectsWithAllStudentsDone();
 
 }
