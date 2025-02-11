@@ -5,6 +5,7 @@ import com.example.demo.dto.exception.FieldErrorDto;
 import com.example.demo.enumeration.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -75,6 +76,16 @@ public class GlobalExceptionHandler {
                 .code(exception.getStatusCode().toString())
                 .build();
         return ResponseEntity.status(exception.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<APIMessageDto<String>> handleAccessDeniedException(AccessDeniedException exception) {
+        APIMessageDto<String> response = APIMessageDto.<String>builder()
+                .result(false)
+                .message("FORBIDDEN: You do not have permission to access this resource.")
+                .code("FORBIDDEN")
+                .build();
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
 
 }

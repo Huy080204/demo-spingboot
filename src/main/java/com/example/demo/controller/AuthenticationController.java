@@ -7,6 +7,7 @@ import com.example.demo.dto.authentication.AuthenticationDto;
 import com.example.demo.dto.authentication.IntrospectDto;
 import com.example.demo.service.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class AuthenticationController {
@@ -28,7 +29,7 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/log-in")
-    public ResponseEntity<APIMessageDto<AuthenticationDto>> authenticate(@RequestBody AuthenticationForm authenticationRequest) {
+    public ResponseEntity<APIMessageDto<AuthenticationDto>> authenticate(@Valid @RequestBody AuthenticationForm authenticationRequest) {
         AuthenticationDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
 
         APIMessageDto<AuthenticationDto> response = APIMessageDto.<AuthenticationDto>builder()

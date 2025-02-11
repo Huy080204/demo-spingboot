@@ -25,13 +25,7 @@ public class StudentSubjectScheduler {
     @Scheduled(cron = "0 0 1 * * *") // 1am
     @Transactional
     public void updateStudentSubjectStatus() {
-        List<Long> subjectIds = studentSubjectRepository.findSubjectsWithAllStudentsDone();
-
-        if (!subjectIds.isEmpty()) {
-            subjectRepository.updateSubjectsDoneStatus(subjectIds);
-            log.info("Updated {} subjects to done = true", subjectIds.size());
-        } else {
-            log.info("No subjects were updated.");
-        }
+        subjectRepository.updateSubjectsDoneStatus();
+        log.info("Updated subjects to done = true");
     }
 }

@@ -18,11 +18,11 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubject, 
     Optional<StudentSubject> findByStudentAndSubject(Student student, Subject subject);
 
     @Query("""
-                 SELECT ss.subject.id\s
+                 SELECT ss.subject.id
                  FROM StudentSubject ss
                  GROUP BY ss.subject.id
-                 HAVING COUNT(ss.id) = SUM(CASE WHEN ss.done = true THEN 1 ELSE 0 END)
-            \s""")
+                 HAVING SUM(CASE WHEN ss.done = false THEN 1 ELSE 0 END) = 0
+            """)
     List<Long> findSubjectsWithAllStudentsDone();
 
 }

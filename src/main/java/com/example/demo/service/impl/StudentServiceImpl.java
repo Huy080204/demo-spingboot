@@ -21,8 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -32,6 +30,8 @@ public class StudentServiceImpl implements StudentService {
 
     StudentRepository studentRepository;
     StudentMapper studentMapper;
+
+    PasswordEncoder passwordEncoder;
 
     DataSource dataSource;
 
@@ -44,7 +44,6 @@ public class StudentServiceImpl implements StudentService {
 
         Student student = studentMapper.toStudent(request);
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         student.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return studentMapper.toStudentResponse(studentRepository.save(student));

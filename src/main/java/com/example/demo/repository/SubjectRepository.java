@@ -17,6 +17,15 @@ public interface SubjectRepository extends JpaRepository<Subject, Long>, JpaSpec
 
     @Modifying
     @Transactional
-    @Query("UPDATE Subject s SET s.done = true WHERE s.id IN :subjectIds")
-    void updateSubjectsDoneStatus(@Param("subjectIds") List<Long> subjectIds);
+    @Query("""
+              UPDATE Subject s
+              SET s.done = true
+              WHERE s.id IN (
+              SELECT ss.subject.id
+                   FROM StudentSubject ss
+                   GROUP BY ss.subject.id
+                   HAVING SUM(CASE WHEN ss.done = false THEN 1 ELSE 0 END) = 0
+              )
+            \s""")
+    void updateSubjectsDoneStatus();
 }
