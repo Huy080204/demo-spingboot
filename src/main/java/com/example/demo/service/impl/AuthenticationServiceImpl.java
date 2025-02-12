@@ -4,29 +4,21 @@ import com.example.demo.form.authentication.AuthenticationForm;
 import com.example.demo.form.authentication.IntrospectForm;
 import com.example.demo.dto.authentication.AuthenticationDto;
 import com.example.demo.dto.authentication.IntrospectDto;
-import com.example.demo.model.Student;
-import com.example.demo.exception.AppException;
-import com.example.demo.enumeration.ErrorCode;
-import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.util.JwtUtil;
 import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.util.List;
@@ -41,18 +33,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationDto authenticate(AuthenticationForm request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+            );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            List<String> authorities = userDetails.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList());
 
-        String token = jwtUtil.generateToken(userDetails.getUsername(), roles);
+            String token = jwtUtil.generateToken(userDetails.getUsername(), authorities);
 
-        return new AuthenticationDto(token, userDetails.getUsername(), roles);
+            return new AuthenticationDto(token, userDetails.getUsername(), authorities);
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
+        }
     }
 
     @Override

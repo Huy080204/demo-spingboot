@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.constant.Authorities;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.exception.AppException;
 import com.example.demo.model.Student;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Student student = studentRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("S_GET"));
+        List<GrantedAuthority> authorities = Authorities.DEFAULT_AUTHORITIES;
 
         return new User(student.getUsername(), student.getPassword(), authorities);
     }

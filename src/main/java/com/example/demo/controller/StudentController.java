@@ -15,6 +15,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +33,7 @@ public class StudentController {
 
     // create
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAuthority('S_CRE')")
     public ResponseEntity<APIMessageDto<StudentDto>> create(@RequestBody @Valid CreateStudentForm request) {
         StudentDto studentResponse = studentService.createStudent(request);
 
@@ -45,6 +49,7 @@ public class StudentController {
 
     // get all
     @GetMapping(path = "/list-all")
+    @PreAuthorize("hasAuthority('S_GET')")
     public ResponseEntity<APIMessageDto<List<StudentDto>>> getAllStudents() {
         List<StudentDto> studentResponses = studentService.getAllStudents();
 
@@ -60,6 +65,7 @@ public class StudentController {
 
     // get by id
     @GetMapping(path = "/get/{id}")
+    @PreAuthorize("hasAuthority('S_GET')")
     public ResponseEntity<APIMessageDto<StudentDto>> getStudentById(@PathVariable("id") Long id) {
         StudentDto studentResponse = studentService.getStudentResponseById(id);
 
@@ -75,7 +81,10 @@ public class StudentController {
 
     // update
     @PutMapping(path = "/update")
+    @PreAuthorize("hasAuthority('S_UPD')")
     public ResponseEntity<APIMessageDto<StudentDto>> updateStudent(@RequestBody @Valid UpdateStudentForm request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Current user authorities: " + authentication.getAuthorities());
         StudentDto updatedStudent = studentService.updateStudent(request);
 
         APIMessageDto<StudentDto> response = APIMessageDto.<StudentDto>builder()
@@ -90,6 +99,7 @@ public class StudentController {
 
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
+    @PreAuthorize("hasAuthority('S_DEL')")
     public ResponseEntity<APIMessageDto<Void>> deleteUser(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
 
@@ -104,6 +114,7 @@ public class StudentController {
 
     // paging and filtering
     @GetMapping(path = "/list")
+    @PreAuthorize("hasAuthority('S_GET')")
     public APIMessageDto<PageResponseDto<StudentDto>> list(
             @ModelAttribute StudentCriteria studentCriteria,
             Pageable pageable

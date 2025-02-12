@@ -16,6 +16,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class SubjectController {
 
     // create
     @PostMapping(path = "/create")
+    @PreAuthorize("hasAuthority('SUB_CRE')")
     public ResponseEntity<APIMessageDto<SubjectDto>> create(@RequestBody @Valid CreateSubjectForm request) {
         SubjectDto subjectResponse = subjectService.createSubject(request);
 
@@ -47,6 +49,7 @@ public class SubjectController {
 
     // get all
     @GetMapping(path = "/list-all")
+    @PreAuthorize("hasAuthority('SUB_GET')")
     public ResponseEntity<APIMessageDto<List<SubjectDto>>> listAll() {
         List<SubjectDto> subjects = subjectService.getAllSubjects();
 
@@ -62,6 +65,7 @@ public class SubjectController {
 
     // get by id
     @GetMapping(path = "/get/{id}")
+    @PreAuthorize("hasAuthority('SUB_GET')")
     public ResponseEntity<APIMessageDto<SubjectDto>> getById(@PathVariable("id") Long id) {
         SubjectDto subjectResponse = subjectService.getSubjectResponseById(id);
 
@@ -77,6 +81,7 @@ public class SubjectController {
 
     // update
     @PutMapping(path = "/update")
+    @PreAuthorize("hasAuthority('SUB_UPD')")
     public ResponseEntity<APIMessageDto<SubjectDto>> update(@RequestBody @Valid UpdateSubjectForm request) {
         SubjectDto subjectResponse = subjectService.updateSubject(request);
 
@@ -92,6 +97,7 @@ public class SubjectController {
 
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
+    @PreAuthorize("hasAuthority('SUB_DEL')")
     public ResponseEntity<APIMessageDto<Void>> deleteById(@PathVariable("id") Long id) {
         subjectService.deleteSubject(id);
 
@@ -106,6 +112,7 @@ public class SubjectController {
 
     // paging and filtering
     @GetMapping(path = "/list")
+    @PreAuthorize("hasAuthority('SUB_GET')")
     public APIMessageDto<PageResponseDto<SubjectDto>> list(
             @ModelAttribute SubjectCriteria subjectCriteria,
             Pageable pageable
@@ -122,6 +129,7 @@ public class SubjectController {
 
     // check all student done
     @GetMapping("/{subjectId}/all-done")
+    @PreAuthorize("hasAuthority('SUB_GET')")
     public ResponseEntity<String> checkIfAllStudentsDone(@PathVariable Long subjectId) {
         List<Long> completedSubjects = studentSubjectRepository.findSubjectsWithAllStudentsDone();
 

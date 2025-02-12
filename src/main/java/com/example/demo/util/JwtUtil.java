@@ -15,10 +15,10 @@ public class JwtUtil {
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
 
-    public String generateToken(String username, List<String> roles) {
+    public String generateToken(String username, List<String> authorities) {
         return Jwts.builder()
                 .setSubject(username)
-                .claim("roles", roles)
+                .claim("authorities", authorities)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // Token 24h
                 .signWith(SignatureAlgorithm.HS256, SIGNER_KEY.getBytes())
@@ -34,13 +34,14 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    public List<String> extractRoles(String token) {
+    public List<String> extractAuthorities(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(SIGNER_KEY.getBytes())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.get("roles", List.class);
+
+        return (List<String>) claims.get("authorities", List.class);
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
