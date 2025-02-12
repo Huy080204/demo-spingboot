@@ -17,7 +17,6 @@ public interface SubjectMapper {
     @Mapping(source = "id", target = "subjectId")
     @Mapping(source = "name", target = "subjectName")
     @Mapping(source = "code", target = "subjectCode")
-    @Named("toSubjectDto")
     SubjectDto toSubjectResponse(Subject subject);
 
     @IterableMapping(elementTargetType = SubjectDto.class)

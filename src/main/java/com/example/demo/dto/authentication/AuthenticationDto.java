@@ -15,5 +15,5 @@ import java.util.List;
 public class AuthenticationDto {
     String token;
     String username;
-    List<String> roles;
+    List<String> authorities;
 }
