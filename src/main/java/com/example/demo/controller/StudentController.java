@@ -33,7 +33,7 @@ public class StudentController {
 
     // create
     @PostMapping(path = "/create")
-    @PreAuthorize("hasAuthority('S_CRE')")
+    @PreAuthorize("hasAuthority('STU_CRE')")
     public ResponseEntity<APIMessageDto<StudentDto>> create(@RequestBody @Valid CreateStudentForm request) {
         StudentDto studentResponse = studentService.createStudent(request);
 
@@ -49,7 +49,7 @@ public class StudentController {
 
     // get all
     @GetMapping(path = "/list-all")
-    @PreAuthorize("hasAuthority('S_GET')")
+    @PreAuthorize("hasAuthority('STU_GET')")
     public ResponseEntity<APIMessageDto<List<StudentDto>>> getAllStudents() {
         List<StudentDto> studentResponses = studentService.getAllStudents();
 
@@ -65,7 +65,7 @@ public class StudentController {
 
     // get by id
     @GetMapping(path = "/get/{id}")
-    @PreAuthorize("hasAuthority('S_GET')")
+    @PreAuthorize("hasAuthority('STU_GET')")
     public ResponseEntity<APIMessageDto<StudentDto>> getStudentById(@PathVariable("id") Long id) {
         StudentDto studentResponse = studentService.getStudentResponseById(id);
 
@@ -81,7 +81,7 @@ public class StudentController {
 
     // update
     @PutMapping(path = "/update")
-    @PreAuthorize("hasAuthority('S_UPD')")
+    @PreAuthorize("hasAuthority('STU_UPD')")
     public ResponseEntity<APIMessageDto<StudentDto>> updateStudent(@RequestBody @Valid UpdateStudentForm request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Current user authorities: " + authentication.getAuthorities());
@@ -99,7 +99,7 @@ public class StudentController {
 
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
-    @PreAuthorize("hasAuthority('S_DEL')")
+    @PreAuthorize("hasAuthority('STU_DEL')")
     public ResponseEntity<APIMessageDto<Void>> deleteUser(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
 
@@ -114,7 +114,7 @@ public class StudentController {
 
     // paging and filtering
     @GetMapping(path = "/list")
-    @PreAuthorize("hasAuthority('S_GET')")
+    @PreAuthorize("hasAuthority('STU_GET')")
     public APIMessageDto<PageResponseDto<StudentDto>> list(
             @ModelAttribute StudentCriteria studentCriteria,
             Pageable pageable

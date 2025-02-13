@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
-    boolean existsByUsername(String username);
+    boolean existsByUserUsername(String username);
 
-    Optional<Student> findByUsername(String username);
+    Optional<Student> findByUserUsername(String username);
 }

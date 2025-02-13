@@ -10,10 +10,7 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class UserDto {
-    String id;
     String username;
-    String password;
-    String firstName;
-    String lastName;
-    LocalDate dob;
+    String fullName;
+    String avatar;
 }

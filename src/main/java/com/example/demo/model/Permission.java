@@ -4,34 +4,27 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class User {
-
+public class Permission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @Column(nullable = false)
-    String username;
+    String pCode;
 
     @Column(nullable = false)
-    String password;
+    String name;
 
-    @Column(nullable = false)
-    String fullName;
-
-    String avatar;
-
-    @Column(nullable = true)
-    Integer gender;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
-    Role role;
-
+    @ManyToMany(mappedBy = "permissions")
+    List<Role> roles = new ArrayList<>();
 }

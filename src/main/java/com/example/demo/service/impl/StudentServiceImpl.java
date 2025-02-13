@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.student.StudentDto;
+import com.example.demo.model.Role;
 import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.form.student.UpdateStudentForm;
@@ -9,6 +10,7 @@ import com.example.demo.model.Student;
 import com.example.demo.exception.AppException;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.StudentMapper;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
 import lombok.AccessLevel;
@@ -29,6 +31,8 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     StudentRepository studentRepository;
+    RoleRepository roleRepository;
+
     StudentMapper studentMapper;
 
     PasswordEncoder passwordEncoder;
@@ -38,13 +42,17 @@ public class StudentServiceImpl implements StudentService {
     // create
     @Override
     public StudentDto createStudent(CreateStudentForm request) {
-        if (studentRepository.existsByUsername(request.getUsername())) {
+        if (studentRepository.existsByUserUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXITED);
         }
 
         Student student = studentMapper.toStudent(request);
 
-        student.setPassword(passwordEncoder.encode(request.getPassword()));
+        student.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Role studentRole = roleRepository.findByName("STUDENT")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        student.getUser().setRole(studentRole);
 
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }
@@ -76,22 +84,16 @@ public class StudentServiceImpl implements StudentService {
 
         studentMapper.updateStudent(student, request);
 
+        student.getUser().setPassword(passwordEncoder.encode(request.getPassword()));
+
         return studentMapper.toStudentResponse(studentRepository.save(student));
     }
 
     // delete by id
     @Override
     public void deleteStudent(Long id) {
-//        try (Connection connection = dataSource.getConnection()) {
-//            connection.setAutoCommit(false);
-
         getStudentById(id);
         studentRepository.deleteById(id);
-
-//            connection.commit();
-//        } catch (SQLException e) {
-//            throw new RuntimeException("Error deleting student", e);
-//        }
     }
 
     // get list paging and filtering

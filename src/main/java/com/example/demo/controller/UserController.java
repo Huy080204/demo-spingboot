@@ -1,13 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.user.UserDto;
-import com.example.demo.form.post.CreatePostForm;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
 import com.example.demo.dto.APIMessageDto;
-import com.example.demo.model.Post;
-import com.example.demo.model.User;
-import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,7 +24,6 @@ import java.util.List;
 public class UserController {
 
     UserService userService;
-    PostService postService;
 
     @PostMapping
     public ResponseEntity<APIMessageDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
@@ -85,35 +80,6 @@ public class UserController {
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User deleted successfully")
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
-    @PostMapping(path = "/{userId}/posts")
-    public ResponseEntity<APIMessageDto<Post>> createPost(@PathVariable("userId") String userId, @RequestBody @Valid CreatePostForm request) {
-        User user = userService.getUserById(userId);
-        Post post = postService.createPost(user, request);
-
-        APIMessageDto<Post> response = APIMessageDto.<Post>builder()
-                .result(true)
-                .code(String.valueOf(HttpStatus.CREATED.value()))
-                .message("Post created successfully")
-                .data(post)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @GetMapping(path = "/{userId}/posts")
-    public ResponseEntity<APIMessageDto<List<Post>>> getAllPostByUser(@PathVariable("userId") String userId) {
-        User user = userService.getUserById(userId);
-
-        APIMessageDto<List<Post>> response = APIMessageDto.<List<Post>>builder()
-                .result(true)
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Posts retrieved successfully")
-                .data(user.getPosts())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);

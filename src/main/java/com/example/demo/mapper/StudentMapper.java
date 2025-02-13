@@ -11,20 +11,27 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface StudentMapper {
+    @Mapping(source = "username", target = "user.username")
+    @Mapping(source = "password", target = "user.password")
+    @Mapping(source = "fullName", target = "user.fullName")
+    @Mapping(source = "gender", target = "user.gender", qualifiedByName = "genderToInteger")
     @Mapping(source = "dateOfBirth", target = "birthDate")
-    @Mapping(source = "gender", target = "gender", qualifiedByName = "genderToInteger")
     Student toStudent(CreateStudentForm request);
 
     @Mapping(source = "id", target = "studentId")
+    @Mapping(source = "user.username", target = "username")
+    @Mapping(source = "user.fullName", target = "fullName")
+    @Mapping(source = "user.gender", target = "gender", qualifiedByName = "integerToGender")
     @Mapping(source = "birthDate", target = "dateOfBirth")
-    @Mapping(source = "gender", target = "gender", qualifiedByName = "integerToGender")
     StudentDto toStudentResponse(Student student);
 
     @IterableMapping(elementTargetType = StudentDto.class)
     List<StudentDto> toStudentResponseList(List<Student> students);
 
+    @Mapping(source = "password", target = "user.password")
+    @Mapping(source = "fullName", target = "user.fullName")
+    @Mapping(source = "gender", target = "user.gender", qualifiedByName = "genderToInteger")
     @Mapping(source = "dateOfBirth", target = "birthDate")
-    @Mapping(source = "gender", target = "gender", qualifiedByName = "genderToInteger")
     void updateStudent(@MappingTarget Student student, UpdateStudentForm request);
 
     @Named("genderToInteger")

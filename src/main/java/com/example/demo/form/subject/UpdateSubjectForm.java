@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class UpdateSubjectForm {
 
-    @NotEmpty(message = "Subject id cannot be null")
+    @NotNull(message = "Subject id cannot be null")
     Long id;
 
     @NotEmpty(message = "Subject name cannot be null or empty")

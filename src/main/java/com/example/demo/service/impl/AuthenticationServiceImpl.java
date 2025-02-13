@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.authentication.AuthenticationForm;
 import com.example.demo.form.authentication.IntrospectForm;
 import com.example.demo.dto.authentication.AuthenticationDto;
@@ -7,9 +8,12 @@ import com.example.demo.dto.authentication.IntrospectDto;
 import com.example.demo.service.AuthenticationService;
 import com.example.demo.util.JwtUtil;
 import com.nimbusds.jose.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -45,47 +49,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             String token = jwtUtil.generateToken(userDetails.getUsername(), authorities);
 
-            return new AuthenticationDto(token, userDetails.getUsername(), authorities);
+            Claims claims = Jwts.parser()
+                    .setSigningKey(jwtUtil.getSIGNER_KEY().getBytes())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String username = claims.getSubject();
+            String fullName = (String) claims.get("fullName");
+            String avatar = (String) claims.get("avatar");
+
+            UserDto userDto = UserDto.builder()
+                    .username(username)
+                    .fullName(fullName)
+                    .avatar(avatar)
+                    .build();
+
+            return new AuthenticationDto(token, userDto, authorities);
         } catch (BadCredentialsException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
     }
 
-    @Override
-    public IntrospectDto introspect(IntrospectForm request) throws JOSEException, ParseException {
-//        String token = request.getToken();
-//        JWSVerifier verifier = new MACVerifier(SIGNER_KEY);
-//        SignedJWT signedJWT = SignedJWT.parse(token);
-//        Date expiration = signedJWT.getJWTClaimsSet().getExpirationTime();
-//        boolean verified = signedJWT.verify(verifier);
-//        return IntrospectDto.builder()
-//                .valid(verified && expiration.after(new Date()))
-//                .build();
-        return null;
-    }
-
-    private String generateToken(String username) {
-//        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
-//
-//        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-//                .subject(username)
-//                .issuer("demo.com")
-//                .issueTime(new Date())
-//                .expirationTime(new Date(
-//                        Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli())
-//                )
-//                .claim("authorities", "ROLE_USER")
-//                .build();
-//
-//        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
-//
-//        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
-//        try {
-//            jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
-//            return jwsObject.serialize();
-//        } catch (JOSEException e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
-    }
 }
