@@ -1,5 +1,6 @@
 package com.example.demo.dto.authentication;
 
+import com.example.demo.dto.user.UserDto;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +15,6 @@ import java.util.List;
 @Builder
 public class AuthenticationDto {
     String token;
-    String username;
+    UserDto user;
     List<String> authorities;
 }

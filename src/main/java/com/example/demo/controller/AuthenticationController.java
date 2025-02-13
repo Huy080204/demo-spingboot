@@ -42,18 +42,4 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/introspect")
-    public ResponseEntity<APIMessageDto<IntrospectDto>> introspect(@RequestBody IntrospectForm introspectRequest) throws ParseException, JOSEException {
-        IntrospectDto introspectResponse = authenticationService.introspect(introspectRequest);
-
-        APIMessageDto<IntrospectDto> response = APIMessageDto.<IntrospectDto>builder()
-                .result(true)
-                .code(String.valueOf(HttpStatus.OK.value()))
-                .message("Login successfully")
-                .data(introspectResponse)
-                .build();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-
 }

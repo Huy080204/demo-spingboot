@@ -13,31 +13,27 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 public class Student {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false, unique = true)
-    String username;
-
-    @Column(nullable = false)
-    String password;
-
-    @Column(nullable = false)
-    String fullName;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    User user;
 
     @Column(nullable = false)
     LocalDate birthDate;
-
-    @Column(nullable = true)
-    Integer gender;
 
     @JsonIgnore
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<StudentSubject> studentSubjects = new ArrayList<>();
 
+    public Student(Long id, User user, LocalDate birthDate) {
+        this.id = id;
+        this.user = user;
+        this.birthDate = birthDate;
+    }
 }
