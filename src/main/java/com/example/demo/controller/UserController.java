@@ -19,13 +19,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/api/users")
+@RequestMapping(path = "/api/user")
 @Tag(name = "User Controller")
 public class UserController {
 
     UserService userService;
 
-    @PostMapping
+    @PostMapping(path = "/create")
     public ResponseEntity<APIMessageDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
         APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
                 .result(true)
@@ -37,7 +37,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping
+    @GetMapping(path = "/get-all")
     public ResponseEntity<APIMessageDto<List<UserDto>>> getAllUsers() {
         APIMessageDto<List<UserDto>> response = APIMessageDto.<List<UserDto>>builder()
                 .result(true)
@@ -49,7 +49,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/get/{id}")
     public ResponseEntity<APIMessageDto<UserDto>> getUserById(@PathVariable("id") String id) {
         APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
                 .result(true)
@@ -61,7 +61,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/update/{id}")
     public ResponseEntity<APIMessageDto<UserDto>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UpdateUserForm request) {
         APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
                 .result(true)
@@ -73,7 +73,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<APIMessageDto<Void>> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
         APIMessageDto<Void> response = APIMessageDto.<Void>builder()
@@ -83,6 +83,16 @@ public class UserController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<APIMessageDto<UserDto>> getProfile(@RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(APIMessageDto.<UserDto>builder()
+                .result(true)
+                .code(String.valueOf(HttpStatus.OK.value()))
+                .message("User profile retrieved successfully")
+                .data(userService.getProfile(authHeader))
+                .build());
     }
 
 }

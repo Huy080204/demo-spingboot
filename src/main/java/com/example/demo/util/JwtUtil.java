@@ -81,4 +81,11 @@ public class JwtUtil {
                 .getExpiration()
                 .before(new Date());
     }
+
+    public Claims parseToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SIGNER_KEY.getBytes())
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }

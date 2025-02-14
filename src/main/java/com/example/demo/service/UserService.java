@@ -19,4 +19,6 @@ public interface UserService {
     UserDto updateUser(String id, UpdateUserForm request);
 
     void deleteUser(String id);
+
+    UserDto getProfile(String authHeader);
 }

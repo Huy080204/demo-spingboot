@@ -1,20 +1,25 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.user.UserDto;
+import com.example.demo.enumeration.ErrorCode;
+import com.example.demo.exception.AppException;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
-import com.example.demo.model.User;
-import com.example.demo.exception.AppException;
-import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
+import com.example.demo.util.JwtUtil;
+import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -25,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
+
+    AuthenticationManager authenticationManager;
+    JwtUtil jwtUtil;
 
     @Override
     public UserDto createUser(CreateUserForm request) {
@@ -70,5 +78,22 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String id) {
         getUserById(id);
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserDto getProfile(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token format");
+        }
+
+        String token = authHeader.substring(7);
+
+        Claims claims = jwtUtil.parseToken(token);
+
+        return UserDto.builder()
+                .username(claims.getSubject())
+                .fullName((String) claims.get("fullName"))
+                .avatar((String) claims.get("avatar"))
+                .build();
     }
 }

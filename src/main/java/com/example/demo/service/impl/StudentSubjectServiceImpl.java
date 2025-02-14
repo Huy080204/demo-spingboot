@@ -1,13 +1,14 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.report.ReportAcademicDto;
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
-import com.example.demo.model.Student;
-import com.example.demo.model.StudentSubject;
-import com.example.demo.model.Subject;
 import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.enumeration.StudentSubjectStatus;
 import com.example.demo.exception.AppException;
 import com.example.demo.mapper.StudentSubjectMapper;
+import com.example.demo.model.Student;
+import com.example.demo.model.StudentSubject;
+import com.example.demo.model.Subject;
 import com.example.demo.repository.StudentSubjectRepository;
 import com.example.demo.service.StudentSubjectService;
 import lombok.AccessLevel;
@@ -76,5 +77,24 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
 
         studentSubjectRepository.deleteById(id);
     }
+
+    @Override
+    public ReportAcademicDto getAcademicReport() {
+        Object rawResult = studentSubjectRepository.getAcademicReport();
+
+        if (!(rawResult instanceof Object[] rawArray) || rawArray.length == 0 || !(rawArray[0] instanceof Object[])) {
+            throw new AppException(ErrorCode.INVALID_FORM);
+        }
+
+        Object[] result = (Object[]) rawArray[0];
+
+        return ReportAcademicDto.builder()
+                .totalCourses(((Number) result[0]).intValue())
+                .totalStudents(((Number) result[1]).intValue())
+                .maleStudents(((Number) result[2]).intValue())
+                .femaleStudents(((Number) result[3]).intValue())
+                .build();
+    }
+
 
 }
