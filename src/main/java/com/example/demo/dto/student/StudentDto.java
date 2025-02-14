@@ -12,7 +12,6 @@ import java.time.LocalDate;
 public class StudentDto {
     Long studentId;
     String username;
-    String password;
     String fullName;
     LocalDate dateOfBirth;
     Gender gender;

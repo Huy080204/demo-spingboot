@@ -1,22 +1,45 @@
 package com.example.demo.util;
 
+import com.example.demo.enumeration.ErrorCode;
+import com.example.demo.exception.AppException;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Getter
 @Component
 public class JwtUtil {
     @Value("${jwt.signerKey}")
     private String SIGNER_KEY;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public String generateToken(String username, List<String> authorities) {
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", user.getUsername());
+        claims.put("fullName", user.getFullName());
+        claims.put("avatar", user.getAvatar());
+
+        claims.put("authorities", authorities);
+
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(username)
                 .claim("authorities", authorities)
                 .setIssuedAt(new Date())
@@ -57,5 +80,12 @@ public class JwtUtil {
                 .getBody()
                 .getExpiration()
                 .before(new Date());
+    }
+
+    public Claims parseToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(SIGNER_KEY.getBytes())
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

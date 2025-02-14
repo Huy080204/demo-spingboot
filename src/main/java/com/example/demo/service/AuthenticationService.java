@@ -12,6 +12,4 @@ public interface AuthenticationService {
 
     AuthenticationDto authenticate(AuthenticationForm request);
 
-    IntrospectDto introspect(IntrospectForm request) throws JOSEException, ParseException;
-
 }

@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface StudentSubjectMapper {
     @Mapping(source = "id", target = "studentSubjectId")
     @Mapping(source = "student", target = "studentResponse")
-    @Mapping(source = "subject", target = "subjectResponse", qualifiedByName = "toSubjectDto")
+//    @Mapping(source = "subject", target = "subjectResponse", qualifiedByName = "toSubjectDto")
+    @Mapping(source = "subject", target = "subjectResponse")
     StudentSubjectDto toStudentSubjectDto(StudentSubject studentSubject);
 }
