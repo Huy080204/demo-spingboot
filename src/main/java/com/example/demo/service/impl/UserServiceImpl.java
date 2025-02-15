@@ -14,12 +14,9 @@ import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,7 +28,6 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     UserMapper userMapper;
 
-    AuthenticationManager authenticationManager;
     JwtUtil jwtUtil;
 
     @Override
@@ -82,13 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getProfile(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token format");
-        }
-
-        String token = authHeader.substring(7);
-
-        Claims claims = jwtUtil.parseToken(token);
+        Claims claims = jwtUtil.extractClaimsFromToken(authHeader);
 
         return UserDto.builder()
                 .username(claims.getSubject())

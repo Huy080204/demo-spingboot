@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.dto.report.ReportAcademicDto;
 import com.example.demo.model.Student;
 import com.example.demo.model.StudentSubject;
 import com.example.demo.model.Subject;
@@ -26,17 +27,17 @@ public interface StudentSubjectRepository extends JpaRepository<StudentSubject, 
     List<Long> findSubjectsWithAllStudentsDone();
 
     @Query("""
-            SELECT
+            SELECT new com.example.demo.dto.report.ReportAcademicDto(
                 COALESCE(COUNT(DISTINCT subj.id), 0),
                 COALESCE(COUNT(DISTINCT s.id), 0),
                 COALESCE(SUM(CASE WHEN u.gender = 1 THEN 1 ELSE 0 END), 0),
                 COALESCE(SUM(CASE WHEN u.gender = 2 THEN 1 ELSE 0 END), 0)
+            )
             FROM StudentSubject ss
             LEFT JOIN Student s ON ss.student.id = s.id
             LEFT JOIN Subject subj ON ss.subject.id = subj.id
             LEFT JOIN User u ON s.user.id = u.id
             """)
-    Object[] getAcademicReport();
-
+    ReportAcademicDto getAcademicReport();
 
 }

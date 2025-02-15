@@ -1,24 +1,24 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.PageResponseDto;
 import com.example.demo.dto.student.StudentDto;
-import com.example.demo.model.Role;
-import com.example.demo.model.criteria.StudentCriteria;
+import com.example.demo.enumeration.ErrorCode;
+import com.example.demo.exception.AppException;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.form.student.UpdateStudentForm;
-import com.example.demo.dto.PageResponseDto;
-import com.example.demo.model.Student;
-import com.example.demo.exception.AppException;
-import com.example.demo.enumeration.ErrorCode;
 import com.example.demo.mapper.StudentMapper;
+import com.example.demo.model.Role;
+import com.example.demo.model.Student;
+import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.StudentRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.StudentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,7 @@ import java.util.List;
 public class StudentServiceImpl implements StudentService {
 
     StudentRepository studentRepository;
+    UserRepository userRepository;
     RoleRepository roleRepository;
 
     StudentMapper studentMapper;
@@ -42,7 +43,7 @@ public class StudentServiceImpl implements StudentService {
     // create
     @Override
     public StudentDto createStudent(CreateStudentForm request) {
-        if (studentRepository.existsByUserUsername(request.getUsername())) {
+        if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXITED);
         }
 
