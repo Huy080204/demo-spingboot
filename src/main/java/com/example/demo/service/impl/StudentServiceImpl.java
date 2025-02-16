@@ -13,6 +13,7 @@ import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.repository.projection.StudentProjection;
 import com.example.demo.service.StudentService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -60,8 +61,8 @@ public class StudentServiceImpl implements StudentService {
 
     // get all
     @Override
-    public List<StudentDto> getAllStudents() {
-        return studentMapper.toStudentResponseList(studentRepository.findAll());
+    public List<StudentProjection> getAllStudents() {
+        return studentRepository.findAllProjected();
     }
 
     // get student dto by id

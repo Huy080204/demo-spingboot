@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "student_subject")
-public class StudentSubject {
+public class StudentSubject extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
