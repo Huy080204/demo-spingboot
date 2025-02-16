@@ -14,14 +14,17 @@ import lombok.experimental.FieldDefaults;
 public class Admin {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @MapsId
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     User user;
 
     @Column(nullable = false)
     Integer level;
+
+    @Column(nullable = false)
+    boolean superAdmin;
 
 }

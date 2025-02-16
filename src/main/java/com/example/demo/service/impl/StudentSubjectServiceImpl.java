@@ -80,20 +80,21 @@ public class StudentSubjectServiceImpl implements StudentSubjectService {
 
     @Override
     public ReportAcademicDto getAcademicReport() {
-        Object rawResult = studentSubjectRepository.getAcademicReport();
-
-        if (!(rawResult instanceof Object[] rawArray) || rawArray.length == 0 || !(rawArray[0] instanceof Object[])) {
-            throw new AppException(ErrorCode.INVALID_FORM);
-        }
-
-        Object[] result = (Object[]) rawArray[0];
-
-        return ReportAcademicDto.builder()
-                .totalCourses(((Number) result[0]).intValue())
-                .totalStudents(((Number) result[1]).intValue())
-                .maleStudents(((Number) result[2]).intValue())
-                .femaleStudents(((Number) result[3]).intValue())
-                .build();
+//        Object rawResult = studentSubjectRepository.getAcademicReport();
+//
+//        if (!(rawResult instanceof Object[] rawArray) || rawArray.length == 0 || !(rawArray[0] instanceof Object[])) {
+//            throw new AppException(ErrorCode.INVALID_FORM);
+//        }
+//
+//        Object[] result = (Object[]) rawArray[0];
+//
+//        return ReportAcademicDto.builder()
+//                .totalCourses(((Number) result[0]).intValue())
+//                .totalStudents(((Number) result[1]).intValue())
+//                .maleStudents(((Number) result[2]).intValue())
+//                .femaleStudents(((Number) result[3]).intValue())
+//                .build();
+        return studentSubjectRepository.getAcademicReport();
     }
 
 

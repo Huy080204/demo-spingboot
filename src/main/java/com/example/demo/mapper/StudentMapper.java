@@ -1,15 +1,17 @@
 package com.example.demo.mapper;
 
-import com.example.demo.enumeration.Gender;
+import com.example.demo.dto.student.StudentDto;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.form.student.UpdateStudentForm;
-import com.example.demo.dto.student.StudentDto;
 import com.example.demo.model.Student;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = GenderMapper.class)
 public interface StudentMapper {
     @Mapping(source = "username", target = "user.username")
     @Mapping(source = "password", target = "user.password")
@@ -34,13 +36,4 @@ public interface StudentMapper {
     @Mapping(source = "dateOfBirth", target = "birthDate")
     void updateStudent(@MappingTarget Student student, UpdateStudentForm request);
 
-    @Named("genderToInteger")
-    static Integer genderToInteger(Gender gender) {
-        return (gender != null) ? gender.getValue() : null;
-    }
-
-    @Named("integerToGender")
-    static Gender integerToGender(Integer gender) {
-        return (gender != null) ? Gender.fromInt(gender) : null;
-    }
 }
