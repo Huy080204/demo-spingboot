@@ -30,9 +30,6 @@ public class CreateAdminForm {
     @NotNull(message = "Level cannot be null or empty")
     Integer level;
 
-    @NotNull(message = "Is super admin cannot be null or empty")
-    Boolean superAdmin;
-
     @ValidGender(allowNull = true)
     Gender gender;
 }

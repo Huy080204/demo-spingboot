@@ -8,9 +8,8 @@ import com.example.demo.form.user.UpdateUserForm;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.UserService;
-import com.example.demo.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,8 +26,6 @@ public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
     UserMapper userMapper;
-
-    JwtUtil jwtUtil;
 
     @Override
     public UserDto createUser(CreateUserForm request) {
@@ -77,13 +74,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getProfile(String authHeader) {
-        Claims claims = jwtUtil.extractClaimsFromToken(authHeader);
+    public UserDto getProfile(CustomUserDetails userDetails) {
 
         return UserDto.builder()
-                .username(claims.getSubject())
-                .fullName((String) claims.get("fullName"))
-                .avatar((String) claims.get("avatar"))
+                .username(userDetails.getUsername())
+                .fullName(userDetails.getFullName())
+                .avatar(userDetails.getAvatar())
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
 import com.example.demo.model.User;
+import com.example.demo.security.CustomUserDetails;
 
 import java.util.List;
 
@@ -20,5 +21,5 @@ public interface UserService {
 
     void deleteUser(String id);
 
-    UserDto getProfile(String authHeader);
+    UserDto getProfile(CustomUserDetails userDetails);
 }

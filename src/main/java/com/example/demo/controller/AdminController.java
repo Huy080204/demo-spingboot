@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.APIMessageDto;
 import com.example.demo.dto.admin.AdminDto;
 import com.example.demo.form.admin.CreateAdminForm;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.AdminService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,10 +30,13 @@ public class AdminController {
     // create
     @PostMapping(path = "/create")
     public ResponseEntity<APIMessageDto<AdminDto>> create(
-            @RequestBody @Valid CreateAdminForm request,
-            @RequestHeader("Authorization") String authHeader
+            @RequestBody @Valid CreateAdminForm request
     ) {
-        AdminDto adminDto = adminService.createAdmin(request, authHeader);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        AdminDto adminDto = adminService.createAdmin(request, userDetails);
 
         APIMessageDto<AdminDto> response = APIMessageDto.<AdminDto>builder()
                 .result(true)

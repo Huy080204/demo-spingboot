@@ -10,9 +10,8 @@ import com.example.demo.model.Role;
 import com.example.demo.repository.AdminRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.AdminService;
-import com.example.demo.util.JwtUtil;
-import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,14 +33,9 @@ public class AdminServiceImpl implements AdminService {
 
     PasswordEncoder passwordEncoder;
 
-    JwtUtil jwtUtil;
-
     @Override
-    public AdminDto createAdmin(CreateAdminForm request, String authHeader) {
-
-        Claims claims = jwtUtil.extractClaimsFromToken(authHeader);
-
-        boolean isSuperAdmin = (boolean) claims.get("superAdmin");
+    public AdminDto createAdmin(CreateAdminForm request, CustomUserDetails userDetails) {
+        boolean isSuperAdmin = userDetails.isSuperAdmin();
 
         if (!isSuperAdmin) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
