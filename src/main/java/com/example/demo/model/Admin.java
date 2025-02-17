@@ -25,6 +25,6 @@ public class Admin {
     Integer level;
 
     @Column(nullable = false)
-    boolean superAdmin;
+    boolean superAdmin = false;
 
 }

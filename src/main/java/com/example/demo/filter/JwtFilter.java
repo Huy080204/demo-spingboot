@@ -1,6 +1,6 @@
 package com.example.demo.filter;
 
-import com.example.demo.util.JwtUtil;
+import com.example.demo.security.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

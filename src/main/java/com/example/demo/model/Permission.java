@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Permission {
+public class Permission extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

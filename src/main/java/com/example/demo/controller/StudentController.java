@@ -6,6 +6,7 @@ import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.form.student.CreateStudentForm;
 import com.example.demo.dto.APIMessageDto;
 import com.example.demo.dto.PageResponseDto;
+import com.example.demo.repository.projection.StudentProjection;
 import com.example.demo.service.StudentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -50,10 +51,10 @@ public class StudentController {
     // get all
     @GetMapping(path = "/list-all")
     @PreAuthorize("hasAuthority('STU_GET')")
-    public ResponseEntity<APIMessageDto<List<StudentDto>>> getAllStudents() {
-        List<StudentDto> studentResponses = studentService.getAllStudents();
+    public ResponseEntity<APIMessageDto<List<StudentProjection>>> getAllStudents() {
+        List<StudentProjection> studentResponses = studentService.getAllStudents();
 
-        APIMessageDto<List<StudentDto>> response = APIMessageDto.<List<StudentDto>>builder()
+        APIMessageDto<List<StudentProjection>> response = APIMessageDto.<List<StudentProjection>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all students successfully")

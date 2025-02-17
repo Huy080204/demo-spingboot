@@ -15,7 +15,6 @@ public interface AdminMapper {
     @Mapping(source = "password", target = "user.password")
     @Mapping(source = "fullName", target = "user.fullName")
     @Mapping(source = "gender", target = "user.gender", qualifiedByName = "genderToInteger")
-    @Mapping(source = "superAdmin", target = "superAdmin")
     Admin toAdmin(CreateAdminForm request);
 
     @Mapping(source = "id", target = "adminId")

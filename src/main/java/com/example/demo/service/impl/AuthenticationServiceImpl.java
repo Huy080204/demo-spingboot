@@ -1,30 +1,23 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.authentication.AuthenticationDto;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.authentication.AuthenticationForm;
-import com.example.demo.form.authentication.IntrospectForm;
-import com.example.demo.dto.authentication.AuthenticationDto;
-import com.example.demo.dto.authentication.IntrospectDto;
+import com.example.demo.security.CustomUserDetails;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthenticationService;
-import com.example.demo.util.JwtUtil;
-import com.nimbusds.jose.*;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,26 +35,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
             );
 
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
             List<String> authorities = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList());
 
-            String token = jwtUtil.generateToken(userDetails.getUsername(), authorities);
-
-            Claims claims = Jwts.parser()
-                    .setSigningKey(jwtUtil.getSIGNER_KEY().getBytes())
-                    .parseClaimsJws(token)
-                    .getBody();
-
-            String username = claims.getSubject();
-            String fullName = (String) claims.get("fullName");
-            String avatar = (String) claims.get("avatar");
+            String token = jwtUtil.generateToken(userDetails, authorities);
 
             UserDto userDto = UserDto.builder()
-                    .username(username)
-                    .fullName(fullName)
-                    .avatar(avatar)
+                    .username(userDetails.getUsername())
+                    .fullName(userDetails.getFullName())
+                    .avatar(userDetails.getAvatar())
                     .build();
 
             return new AuthenticationDto(token, userDto, authorities);
