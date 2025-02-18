@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.criteria.SubjectCriteria;
 import com.example.demo.form.subject.CreateSubjectForm;
 import com.example.demo.form.subject.UpdateSubjectForm;
-import com.example.demo.dto.APIMessageDto;
+import com.example.demo.dto.ApiMessageDto;
 import com.example.demo.dto.PageResponseDto;
 import com.example.demo.dto.subject.SubjectDto;
 import com.example.demo.repository.StudentSubjectRepository;
@@ -34,10 +34,10 @@ public class SubjectController {
     // create
     @PostMapping(path = "/create")
     @PreAuthorize("hasAuthority('SUB_CRE')")
-    public ResponseEntity<APIMessageDto<SubjectDto>> create(@RequestBody @Valid CreateSubjectForm request) {
+    public ResponseEntity<ApiMessageDto<SubjectDto>> create(@RequestBody @Valid CreateSubjectForm request) {
         SubjectDto subjectResponse = subjectService.createSubject(request);
 
-        APIMessageDto<SubjectDto> response = APIMessageDto.<SubjectDto>builder()
+        ApiMessageDto<SubjectDto> response = ApiMessageDto.<SubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Subject created successfully")
@@ -50,10 +50,10 @@ public class SubjectController {
     // get all
     @GetMapping(path = "/list-all")
     @PreAuthorize("hasAuthority('SUB_GET')")
-    public ResponseEntity<APIMessageDto<List<SubjectDto>>> listAll() {
+    public ResponseEntity<ApiMessageDto<List<SubjectDto>>> listAll() {
         List<SubjectDto> subjects = subjectService.getAllSubjects();
 
-        APIMessageDto<List<SubjectDto>> response = APIMessageDto.<List<SubjectDto>>builder()
+        ApiMessageDto<List<SubjectDto>> response = ApiMessageDto.<List<SubjectDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all subjects successfully")
@@ -66,10 +66,10 @@ public class SubjectController {
     // get by id
     @GetMapping(path = "/get/{id}")
     @PreAuthorize("hasAuthority('SUB_GET')")
-    public ResponseEntity<APIMessageDto<SubjectDto>> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiMessageDto<SubjectDto>> getById(@PathVariable("id") Long id) {
         SubjectDto subjectResponse = subjectService.getSubjectResponseById(id);
 
-        APIMessageDto<SubjectDto> response = APIMessageDto.<SubjectDto>builder()
+        ApiMessageDto<SubjectDto> response = ApiMessageDto.<SubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get subject successfully")
@@ -82,10 +82,10 @@ public class SubjectController {
     // update
     @PutMapping(path = "/update")
     @PreAuthorize("hasAuthority('SUB_UPD')")
-    public ResponseEntity<APIMessageDto<SubjectDto>> update(@RequestBody @Valid UpdateSubjectForm request) {
+    public ResponseEntity<ApiMessageDto<SubjectDto>> update(@RequestBody @Valid UpdateSubjectForm request) {
         SubjectDto subjectResponse = subjectService.updateSubject(request);
 
-        APIMessageDto<SubjectDto> response = APIMessageDto.<SubjectDto>builder()
+        ApiMessageDto<SubjectDto> response = ApiMessageDto.<SubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Subject updated successfully")
@@ -98,10 +98,10 @@ public class SubjectController {
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
     @PreAuthorize("hasAuthority('SUB_DEL')")
-    public ResponseEntity<APIMessageDto<Void>> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiMessageDto<Void>> deleteById(@PathVariable("id") Long id) {
         subjectService.deleteSubject(id);
 
-        APIMessageDto<Void> response = APIMessageDto.<Void>builder()
+        ApiMessageDto<Void> response = ApiMessageDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Subject deleted successfully")
@@ -113,13 +113,13 @@ public class SubjectController {
     // paging and filtering
     @GetMapping(path = "/list")
     @PreAuthorize("hasAuthority('SUB_GET')")
-    public APIMessageDto<PageResponseDto<SubjectDto>> list(
+    public ApiMessageDto<PageResponseDto<SubjectDto>> list(
             @ModelAttribute SubjectCriteria subjectCriteria,
             Pageable pageable
     ) {
         PageResponseDto<SubjectDto> pageResponse = subjectService.getPageSubjects(subjectCriteria, pageable);
 
-        return APIMessageDto.<PageResponseDto<SubjectDto>>builder()
+        return ApiMessageDto.<PageResponseDto<SubjectDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get subject successfully")

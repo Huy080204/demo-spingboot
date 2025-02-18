@@ -1,12 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.form.authentication.AuthenticationForm;
-import com.example.demo.form.authentication.IntrospectForm;
-import com.example.demo.dto.APIMessageDto;
+import com.example.demo.dto.ApiMessageDto;
 import com.example.demo.dto.authentication.AuthenticationDto;
-import com.example.demo.dto.authentication.IntrospectDto;
 import com.example.demo.service.AuthenticationService;
-import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.ParseException;
-
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -29,10 +24,10 @@ public class AuthenticationController {
     AuthenticationService authenticationService;
 
     @PostMapping("/log-in")
-    public ResponseEntity<APIMessageDto<AuthenticationDto>> authenticate(@Valid @RequestBody AuthenticationForm authenticationRequest) {
+    public ResponseEntity<ApiMessageDto<AuthenticationDto>> authenticate(@Valid @RequestBody AuthenticationForm authenticationRequest) {
         AuthenticationDto authenticationResponse = authenticationService.authenticate(authenticationRequest);
 
-        APIMessageDto<AuthenticationDto> response = APIMessageDto.<AuthenticationDto>builder()
+        ApiMessageDto<AuthenticationDto> response = ApiMessageDto.<AuthenticationDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Login successfully")

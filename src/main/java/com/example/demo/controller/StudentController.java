@@ -4,7 +4,7 @@ import com.example.demo.dto.student.StudentDto;
 import com.example.demo.form.student.UpdateStudentForm;
 import com.example.demo.model.criteria.StudentCriteria;
 import com.example.demo.form.student.CreateStudentForm;
-import com.example.demo.dto.APIMessageDto;
+import com.example.demo.dto.ApiMessageDto;
 import com.example.demo.dto.PageResponseDto;
 import com.example.demo.repository.projection.StudentProjection;
 import com.example.demo.service.StudentService;
@@ -35,10 +35,10 @@ public class StudentController {
     // create
     @PostMapping(path = "/create")
     @PreAuthorize("hasAuthority('STU_CRE')")
-    public ResponseEntity<APIMessageDto<StudentDto>> create(@RequestBody @Valid CreateStudentForm request) {
+    public ResponseEntity<ApiMessageDto<StudentDto>> create(@RequestBody @Valid CreateStudentForm request) {
         StudentDto studentResponse = studentService.createStudent(request);
 
-        APIMessageDto<StudentDto> response = APIMessageDto.<StudentDto>builder()
+        ApiMessageDto<StudentDto> response = ApiMessageDto.<StudentDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Student created successfully")
@@ -51,10 +51,10 @@ public class StudentController {
     // get all
     @GetMapping(path = "/list-all")
     @PreAuthorize("hasAuthority('STU_GET')")
-    public ResponseEntity<APIMessageDto<List<StudentProjection>>> getAllStudents() {
+    public ResponseEntity<ApiMessageDto<List<StudentProjection>>> getAllStudents() {
         List<StudentProjection> studentResponses = studentService.getAllStudents();
 
-        APIMessageDto<List<StudentProjection>> response = APIMessageDto.<List<StudentProjection>>builder()
+        ApiMessageDto<List<StudentProjection>> response = ApiMessageDto.<List<StudentProjection>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all students successfully")
@@ -67,10 +67,10 @@ public class StudentController {
     // get by id
     @GetMapping(path = "/get/{id}")
     @PreAuthorize("hasAuthority('STU_GET')")
-    public ResponseEntity<APIMessageDto<StudentDto>> getStudentById(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiMessageDto<StudentDto>> getStudentById(@PathVariable("id") Long id) {
         StudentDto studentResponse = studentService.getStudentResponseById(id);
 
-        APIMessageDto<StudentDto> response = APIMessageDto.<StudentDto>builder()
+        ApiMessageDto<StudentDto> response = ApiMessageDto.<StudentDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get student successfully")
@@ -83,12 +83,12 @@ public class StudentController {
     // update
     @PutMapping(path = "/update")
     @PreAuthorize("hasAuthority('STU_UPD')")
-    public ResponseEntity<APIMessageDto<StudentDto>> updateStudent(@RequestBody @Valid UpdateStudentForm request) {
+    public ResponseEntity<ApiMessageDto<StudentDto>> updateStudent(@RequestBody @Valid UpdateStudentForm request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Current user authorities: " + authentication.getAuthorities());
         StudentDto updatedStudent = studentService.updateStudent(request);
 
-        APIMessageDto<StudentDto> response = APIMessageDto.<StudentDto>builder()
+        ApiMessageDto<StudentDto> response = ApiMessageDto.<StudentDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Student updated successfully")
@@ -101,10 +101,10 @@ public class StudentController {
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
     @PreAuthorize("hasAuthority('STU_DEL')")
-    public ResponseEntity<APIMessageDto<Void>> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiMessageDto<Void>> deleteUser(@PathVariable("id") Long id) {
         studentService.deleteStudent(id);
 
-        APIMessageDto<Void> response = APIMessageDto.<Void>builder()
+        ApiMessageDto<Void> response = ApiMessageDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Student deleted successfully")
@@ -116,13 +116,13 @@ public class StudentController {
     // paging and filtering
     @GetMapping(path = "/list")
     @PreAuthorize("hasAuthority('STU_GET')")
-    public APIMessageDto<PageResponseDto<StudentDto>> list(
+    public ApiMessageDto<PageResponseDto<StudentDto>> list(
             @ModelAttribute StudentCriteria studentCriteria,
             Pageable pageable
     ) {
         PageResponseDto<StudentDto> pageResponse = studentService.getPageStudents(studentCriteria, pageable);
 
-        return APIMessageDto.<PageResponseDto<StudentDto>>builder()
+        return ApiMessageDto.<PageResponseDto<StudentDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get students successfully")

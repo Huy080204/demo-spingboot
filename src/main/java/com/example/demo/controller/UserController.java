@@ -3,7 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.user.UserDto;
 import com.example.demo.form.user.CreateUserForm;
 import com.example.demo.form.user.UpdateUserForm;
-import com.example.demo.dto.APIMessageDto;
+import com.example.demo.dto.ApiMessageDto;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,8 +29,8 @@ public class UserController {
     UserService userService;
 
     @PostMapping(path = "/create")
-    public ResponseEntity<APIMessageDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
-        APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
+    public ResponseEntity<ApiMessageDto<UserDto>> createUser(@RequestBody @Valid CreateUserForm request) {
+        ApiMessageDto<UserDto> response = ApiMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED))
                 .message("User created successfully")
@@ -41,8 +41,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/get-all")
-    public ResponseEntity<APIMessageDto<List<UserDto>>> getAllUsers() {
-        APIMessageDto<List<UserDto>> response = APIMessageDto.<List<UserDto>>builder()
+    public ResponseEntity<ApiMessageDto<List<UserDto>>> getAllUsers() {
+        ApiMessageDto<List<UserDto>> response = ApiMessageDto.<List<UserDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all users successfully")
@@ -53,8 +53,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/get/{id}")
-    public ResponseEntity<APIMessageDto<UserDto>> getUserById(@PathVariable("id") String id) {
-        APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
+    public ResponseEntity<ApiMessageDto<UserDto>> getUserById(@PathVariable("id") String id) {
+        ApiMessageDto<UserDto> response = ApiMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get user successfully")
@@ -65,8 +65,8 @@ public class UserController {
     }
 
     @PutMapping(path = "/update/{id}")
-    public ResponseEntity<APIMessageDto<UserDto>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UpdateUserForm request) {
-        APIMessageDto<UserDto> response = APIMessageDto.<UserDto>builder()
+    public ResponseEntity<ApiMessageDto<UserDto>> updateUser(@PathVariable("id") String id, @RequestBody @Valid UpdateUserForm request) {
+        ApiMessageDto<UserDto> response = ApiMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User updated successfully")
@@ -77,9 +77,9 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<APIMessageDto<Void>> deleteUser(@PathVariable("id") String id) {
+    public ResponseEntity<ApiMessageDto<Void>> deleteUser(@PathVariable("id") String id) {
         userService.deleteUser(id);
-        APIMessageDto<Void> response = APIMessageDto.<Void>builder()
+        ApiMessageDto<Void> response = ApiMessageDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User deleted successfully")
@@ -89,12 +89,12 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<APIMessageDto<UserDto>> getProfile() {
+    public ResponseEntity<ApiMessageDto<UserDto>> getProfile() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        return ResponseEntity.ok(APIMessageDto.<UserDto>builder()
+        return ResponseEntity.ok(ApiMessageDto.<UserDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("User profile retrieved successfully")

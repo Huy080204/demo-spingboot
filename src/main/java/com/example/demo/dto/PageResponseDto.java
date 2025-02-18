@@ -1,13 +1,13 @@
 package com.example.demo.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Collections;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)

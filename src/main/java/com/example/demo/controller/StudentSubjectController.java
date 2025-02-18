@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.APIMessageDto;
+import com.example.demo.dto.ApiMessageDto;
 import com.example.demo.dto.studentSubject.StudentSubjectDto;
 import com.example.demo.form.studentSubject.CreateStudentSubjectForm;
 import com.example.demo.form.studentSubject.UpdateStudentSubjectForm;
@@ -30,13 +30,13 @@ public class StudentSubjectController {
 
     // create
     @PostMapping(path = "/create")
-    public ResponseEntity<APIMessageDto<StudentSubjectDto>> createStudentSubject(@Valid @RequestBody CreateStudentSubjectForm request) {
+    public ResponseEntity<ApiMessageDto<StudentSubjectDto>> createStudentSubject(@Valid @RequestBody CreateStudentSubjectForm request) {
         Student student = studentService.getStudentById(request.getStudentId());
         Subject subject = subjectService.getSubjectById(request.getSubjectId());
 
         StudentSubjectDto studentSubject = studentSubjectService.createStudentSubject(student, subject);
 
-        APIMessageDto<StudentSubjectDto> response = APIMessageDto.<StudentSubjectDto>builder()
+        ApiMessageDto<StudentSubjectDto> response = ApiMessageDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Create student subject successfully")
@@ -48,10 +48,10 @@ public class StudentSubjectController {
 
     // get by id
     @GetMapping(path = "/get/{id}")
-    public ResponseEntity<APIMessageDto<StudentSubjectDto>> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiMessageDto<StudentSubjectDto>> getById(@PathVariable("id") Long id) {
         StudentSubjectDto studentSubject = studentSubjectService.getStudentSubjectResponseById(id);
 
-        APIMessageDto<StudentSubjectDto> response = APIMessageDto.<StudentSubjectDto>builder()
+        ApiMessageDto<StudentSubjectDto> response = ApiMessageDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get successfully")
@@ -63,14 +63,14 @@ public class StudentSubjectController {
 
     // update
     @PutMapping(path = "/update")
-    public ResponseEntity<APIMessageDto<StudentSubjectDto>> update(@RequestBody UpdateStudentSubjectForm form) {
+    public ResponseEntity<ApiMessageDto<StudentSubjectDto>> update(@RequestBody UpdateStudentSubjectForm form) {
 
         Student student = studentService.getStudentById(form.getStudentId());
         Subject subject = subjectService.getSubjectById(form.getSubjectId());
 
         StudentSubjectDto studentSubject = studentSubjectService.updateStudentSubject(student, subject, form.getStatus(), form.getDone());
 
-        APIMessageDto<StudentSubjectDto> response = APIMessageDto.<StudentSubjectDto>builder()
+        ApiMessageDto<StudentSubjectDto> response = ApiMessageDto.<StudentSubjectDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get successfully")
@@ -82,10 +82,10 @@ public class StudentSubjectController {
 
     // delete by id
     @DeleteMapping(path = "/delete/{id}")
-    public ResponseEntity<APIMessageDto<Void>> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<ApiMessageDto<Void>> delete(@PathVariable("id") Long id) {
         studentSubjectService.deleteStudentSubjectById(id);
 
-        APIMessageDto<Void> response = APIMessageDto.<Void>builder()
+        ApiMessageDto<Void> response = ApiMessageDto.<Void>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Delete successfully")
