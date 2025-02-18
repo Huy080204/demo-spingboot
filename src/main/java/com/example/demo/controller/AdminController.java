@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.APIMessageDto;
+import com.example.demo.dto.ApiMessageDto;
 import com.example.demo.dto.admin.AdminDto;
 import com.example.demo.form.admin.CreateAdminForm;
 import com.example.demo.security.CustomUserDetails;
@@ -29,7 +29,7 @@ public class AdminController {
 
     // create
     @PostMapping(path = "/create")
-    public ResponseEntity<APIMessageDto<AdminDto>> create(
+    public ResponseEntity<ApiMessageDto<AdminDto>> create(
             @RequestBody @Valid CreateAdminForm request
     ) {
 
@@ -38,7 +38,7 @@ public class AdminController {
 
         AdminDto adminDto = adminService.createAdmin(request, userDetails);
 
-        APIMessageDto<AdminDto> response = APIMessageDto.<AdminDto>builder()
+        ApiMessageDto<AdminDto> response = ApiMessageDto.<AdminDto>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.CREATED.value()))
                 .message("Admin created successfully")
@@ -50,10 +50,10 @@ public class AdminController {
 
     // get all
     @GetMapping(path = "/list-all")
-    public ResponseEntity<APIMessageDto<List<AdminDto>>> getAllStudents() {
+    public ResponseEntity<ApiMessageDto<List<AdminDto>>> getAllStudents() {
         List<AdminDto> studentResponses = adminService.getAllAdmins();
 
-        APIMessageDto<List<AdminDto>> response = APIMessageDto.<List<AdminDto>>builder()
+        ApiMessageDto<List<AdminDto>> response = ApiMessageDto.<List<AdminDto>>builder()
                 .result(true)
                 .code(String.valueOf(HttpStatus.OK.value()))
                 .message("Get all admins successfully")
