@@ -4,6 +4,7 @@ import com.example.demo.enumeration.Gender;
 import com.example.demo.validation.ValidGender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -12,12 +13,12 @@ import lombok.experimental.FieldDefaults;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Getter
-@Schema(name = "CreateLecturerForm", description = "Request body for creating a new lecturer")
-public class CreateLecturerForm {
+@Schema(name = "UpdateLecturerForm", description = "Request body for updating a new lecturer")
+public class UpdateLecturerForm {
 
-    @NotBlank(message = "Username cannot be null or empty")
-    @Schema(description = "Unique username for the lecturer", example = "NguyenVanA")
-    String username;
+    @NotNull(message = "Id cannot be null")
+    @Schema(description = "Id for the lecturer", example = "1")
+    Long lecturerId;
 
     @NotBlank(message = "Password cannot be null or empty")
     @Size(min = 6, message = "Password must be at least 6 characters")
@@ -36,7 +37,7 @@ public class CreateLecturerForm {
     @Schema(description = "Career of the lecturer", example = "Web Programing")
     String career;
 
-    @ValidGender(allowNull = true)
+    @ValidGender(allowNull = false)
     @Schema(description = "Gender of the student (MALE, FEMALE or OTHER)", example = "MALE")
     Gender gender;
 }
