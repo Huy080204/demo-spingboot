@@ -5,14 +5,16 @@ import com.example.demo.dto.PageResponseDto;
 import com.example.demo.dto.period.PeriodDto;
 import com.example.demo.model.criteria.PeriodCriteria;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "period-service", url = "http://localhost:8383/api/period")
 public interface PeriodFeignClient {
-    @PostMapping("/list")
+    @GetMapping("/list")
     ApiMessageDto<PageResponseDto<PeriodDto>> getListPeriods(
-            PeriodCriteria periodCriteria,
-            Pageable pageable
+            @SpringQueryMap PeriodCriteria periodCriteria,
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     );
 }

@@ -30,7 +30,7 @@ public class FeignController {
             PeriodCriteria periodCriteria,
             Pageable pageable
     ) {
-        return periodFeignClient.getListPeriods(periodCriteria, pageable);
+        return periodFeignClient.getListPeriods(periodCriteria, pageable.getPageNumber(), pageable.getPageSize());
     }
 
     @PostMapping("/enroll")
