@@ -13,6 +13,7 @@ public class CustomFeignErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ErrorDecoder defaultDecoder = new Default();
 
+
     @Override
     public Exception decode(String methodKey, Response response) {
         try {
@@ -20,14 +21,28 @@ public class CustomFeignErrorDecoder implements ErrorDecoder {
 
             log.error("FeignClient Error: {} - {}", response.status(), errorResponse.getMessage());
 
-            return new AppException(ErrorCode.LECTURER_SCHEDULER_EXITED);
+            String errorResponseMessageStr = errorResponse.getMessage();
+            ErrorCode errorCode = getErrorCodeFromString(errorResponseMessageStr);
 
+            if (errorCode != null) {
+                return new AppException(errorCode);
+            } else {
+                return new AppException(ErrorCode.UNAUTHENTICATED);
+            }
         } catch (IOException e) {
             log.error("Error decoding Feign error response", e);
+            return new RuntimeException("Error parsing Feign error response", e);
         } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        return defaultDecoder.decode(methodKey, response);
+    private ErrorCode getErrorCodeFromString(String message) {
+        for (ErrorCode e : ErrorCode.values()) {
+            if (e.getMessage().equals(message)) {
+                return e;
+            }
+        }
+        return null;
     }
 }
