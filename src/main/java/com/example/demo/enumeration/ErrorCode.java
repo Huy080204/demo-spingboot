@@ -10,7 +10,10 @@ public enum ErrorCode {
     INVALID_FORM("ERROR", "Invalid form"),
     UNAUTHENTICATED("ERROR", "Unauthenticated"),
     STUDENT_ALREADY_ENROLLED("ERROR", "Student already enrolled"),
-    LECTURER_SCHEDULER_EXITED("ERROR", "Lecturer scheduler already exists"),
+    PERIOD_EXITED("ERROR", "Period already exists"),
+    PERIOD_NOT_FOUND("NOT_FOUND", "Period not found"),
+    LECTURER_SCHEDULER_NOT_FOUND("NOT_FOUND", "Lecturer scheduler not found"),
+    LECTURER_SCHEDULER_EXITED("ERROR", "Lecturer scheduler already exists")
     ;
 
     private String code;
