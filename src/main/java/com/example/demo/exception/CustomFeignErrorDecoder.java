@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CustomFeignErrorDecoder implements ErrorDecoder {
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final ErrorDecoder defaultDecoder = new Default();
-
 
     @Override
     public Exception decode(String methodKey, Response response) {
