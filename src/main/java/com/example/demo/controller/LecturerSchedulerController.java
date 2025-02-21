@@ -9,6 +9,7 @@ import com.example.demo.form.lecturerSchduler.UpdateLecturerSchedulerForm;
 import com.example.demo.model.criteria.LecturerSchedulerCriteria;
 import com.example.demo.service.LecturerService;
 import com.example.demo.service.SubjectService;
+import com.example.demo.util.PageableUtil;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -31,6 +33,7 @@ public class LecturerSchedulerController {
 
     // create
     @PostMapping("/create")
+    @PreAuthorize("hasAuthority('LEC_SDL_CRE')")
     public ApiMessageDto<LecturerSchedulerDto> getExternalPeriods(@RequestBody @Valid CreateLecturerSchedulerForm form) {
         // check lecturer exists
         lecturerService.getLecturer(form.getLecturerId());
@@ -42,21 +45,25 @@ public class LecturerSchedulerController {
 
     // get paging and filtering
     @GetMapping(path = "/get/{id}")
+    @PreAuthorize("hasAuthority('LEC_SDL_GET')")
     public ApiMessageDto<LecturerSchedulerDto> getById(@PathVariable("id") Long id) {
         return lecturerSchedulerFeignClient.getById(id);
     }
 
     // get paging and filtering
     @GetMapping(path = "/list")
+    @PreAuthorize("hasAuthority('LEC_SDL_GET')")
     public ApiMessageDto<PageResponseDto<LecturerSchedulerDto>> list(
-            @ModelAttribute LecturerSchedulerCriteria lecturerSchedulerCriteria,
+            LecturerSchedulerCriteria lecturerSchedulerCriteria,
             Pageable pageable
     ) {
-        return lecturerSchedulerFeignClient.list(lecturerSchedulerCriteria, pageable);
+        String pageableHeader = PageableUtil.convertPageableToString(pageable);
+        return lecturerSchedulerFeignClient.list(lecturerSchedulerCriteria, pageableHeader);
     }
 
     // update
     @PutMapping(path = "/update")
+    @PreAuthorize("hasAuthority('LEC_SDL_UPD')")
     public ResponseEntity<ApiMessageDto<LecturerSchedulerDto>> update(@RequestBody @Valid UpdateLecturerSchedulerForm form) {
         // check lecturer exists
         lecturerService.getLecturer(form.getLecturerId());
@@ -68,6 +75,7 @@ public class LecturerSchedulerController {
 
     // delete
     @DeleteMapping(path = "/delete/{id}")
+    @PreAuthorize("hasAuthority('LEC_SDL_DEL')")
     public ResponseEntity<ApiMessageDto<Void>> update(@PathVariable Long id) {
         return lecturerSchedulerFeignClient.delete(id);
     }

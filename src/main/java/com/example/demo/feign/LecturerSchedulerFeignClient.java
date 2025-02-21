@@ -10,7 +10,7 @@ import com.example.demo.form.lecturerSchduler.UpdateLecturerSchedulerForm;
 import com.example.demo.model.criteria.LecturerSchedulerCriteria;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.data.domain.Pageable;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +27,8 @@ public interface LecturerSchedulerFeignClient {
 
     @GetMapping(path = "/list")
     ApiMessageDto<PageResponseDto<LecturerSchedulerDto>> list(
-            @ModelAttribute LecturerSchedulerCriteria criteria,
-            Pageable pageable
+            @SpringQueryMap LecturerSchedulerCriteria criteria,
+            @RequestHeader(value = "CUSTOM_PAGEABLE", required = false) String pageableHeader
     );
 
     @PutMapping(path = "/update")

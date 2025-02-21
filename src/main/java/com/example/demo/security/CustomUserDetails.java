@@ -20,7 +20,6 @@ public class CustomUserDetails implements UserDetails {
     boolean superAdmin;
     Collection<? extends GrantedAuthority> authorities;
 
-
     @Override
     public boolean isAccountNonExpired() {
         return true;

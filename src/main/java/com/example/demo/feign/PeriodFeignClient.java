@@ -11,7 +11,6 @@ import com.example.demo.model.criteria.PeriodCriteria;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,7 @@ public interface PeriodFeignClient {
     @GetMapping("/list")
     ApiMessageDto<PageResponseDto<PeriodDto>> getListPeriods(
             @SpringQueryMap PeriodCriteria periodCriteria,
-            Pageable pageable
+            @RequestHeader(value = "CUSTOM_PAGEABLE", required = false) String pageableHeader
     );
 
     @PutMapping("/update")
